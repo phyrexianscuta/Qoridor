@@ -1,0 +1,388 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Untitled Document</title>
+<style>
+	#game_table{
+		display: block;
+	}
+	.horizontalWall{
+		width:108px;
+		height:16px;
+		background-color: #711905;
+		z-index:1
+	}
+	.verticalWall{
+		width:16px;
+		height: 108px;
+		background-color:#711905;
+		margin-top: -30px;
+		margin-left: 40px;
+		z-index:1
+	}
+	.vertical_wall_tile{
+		width:16px;
+		height:110px;
+		position:absolute;
+	}
+	#walls{
+		height:250px;
+		width:200px;
+		border-radius: 5xp;
+		border:1px solid grey;
+		margin-left: 850px;
+		margin-top: -450px
+	}
+	#chooseWall{
+		height: 70px;
+		width: 130px;
+		align-content: center;
+		margin-left: 20px;
+		padding-left:30px;
+		padding-top: 30px;
+	}
+	document{
+		font-family: roboto;
+	}
+	.table_header div:nth-child(1){
+		background-color: #976729;
+	}
+	.table_header div:nth-child(n+2){
+		background-color: #38260F;
+	}
+	.table_header div:nth-last-child(1){
+		background-color: #976729;
+	}
+	#table_body div{
+		background-color: #DFBA8A;
+		width: 45px;
+		height: 45px;
+		display: block;
+		float: left;
+		margin: 10px;
+	}
+	.table_header div{
+		width: 45px;
+		height: 45px;
+		display: block;
+		float: left;
+		margin: 10px;
+		font-size: 20px;
+		color: aliceblue;
+		text-align: center;
+	}
+	#table{
+		border: 1px solid black;
+		width:730px;
+		height: 810px;
+		position: relative;
+		margin-left: 80px;
+		background-color: antiquewhite
+	}
+	.table_header{
+		height:60px;
+		width:770px;
+		margin-left: 5px
+	}
+	#table_body{
+		width: 585px;
+		height: 590px;
+		margin-left: 70px;
+		margin-top: 15px
+	}
+	
+	#table_header_bottom{
+		position: absolute;
+		bottom: 50px
+	}
+	#table_header_top{
+		margin-top: 30px;
+	}
+
+	.separacion{
+		height: 16px;
+		width: 565px;
+		display: inline-block;
+		position: absolute;
+		background-color:gray;
+		left: 80px;
+	}
+	#separacion_top{
+		top:90px;
+
+	}
+	#separacion_bottom{
+		bottom:108px;
+	}
+	.peon{
+		margin-left: 7px;
+		margin-top: 0px;
+	}
+	.hover{
+		background-color: red !important
+	}
+</style>
+<script>
+	var peon_blanco = document.createElement('img')
+	var peon_negro = document.createElement('img')
+	var	vertices=[]
+	var aristas = []
+	var table= []
+	var wall_drop_places = []
+	var walls_opp = 10
+	var walls_me  = 10
+	peon_blanco.src = 'peon_blanco2.png'
+	peon_blanco.className ='peon'
+	peon_blanco.id='peon_blanco'
+	peon_negro.src = 'peon_negro2.png'
+	peon_negro.className ='peon'
+	peon_negro.id='peon_negro'
+	var Wall = document.createElement("DIV")
+	Wall.className = "horizontalWall"
+</script>
+</head>
+
+<body>
+<div id="game_table">
+	<div id="table">
+		<div class="table_header" id ="table_header_top">
+				<div>
+					
+				</div>
+				<div>
+					1
+				</div>
+				<div>
+					2
+				</div>
+				<div>
+					3
+				</div>
+				<div>
+					4
+				</div>
+				<div>
+					5
+				</div>	
+				<div>
+					6
+				</div>
+				<div>
+					7
+				</div>
+				<div>
+					8
+				</div>
+				<div>
+					9
+				</div>
+				<div>
+						
+				</div>
+		</div>
+		<div class="separacion" id="separacion_top"> </div>
+		<div id="table_body"> </div>
+		<div class="separacion" id="separacion_bottom"> </div>
+		<div class="table_header" id ="table_header_bottom">
+				<div>
+					
+				</div>
+				<div>
+					1
+				</div>
+				<div>
+					2
+				</div>
+				<div>
+					3
+				</div>
+				<div>
+					4
+				</div>
+				<div>
+					5
+				</div>	
+				<div>
+					6
+				</div>
+				<div>
+					7
+				</div>
+				<div>
+					8
+				</div>
+				<div>
+					9
+				</div>
+				<div>
+					
+				</div>
+		</div>
+	</div>	
+	<div id="walls"> 
+		<h3>Walls</h3>
+		<h4>Your walls left:</h4> <div id="wallscounter"></div>
+		<h4>AI walls left:</h4> <div id="AIwallscounter"></div>
+		<div id="chooseWall"></div>
+	</div>
+</div>
+<script src="jquery-3.2.1.min.js"></script>
+<script src="jquery-ui-1.12.1/jquery-ui.js"></script>
+<script>
+var table_body = document.getElementById("table_body")
+for(var f=0; f<=8;f++){
+	for(var c=0;c<=8;c++){
+		var cell = document.createElement("DIV");
+		table.push(cell);
+		table_body.appendChild(cell);
+	}
+}
+function isAristaAvailable(start,end){
+	var aristas = window.aristas;
+	for ( var l=0;l<aristas.length;l++){
+		if(aristas[l].has(start) && aristas[l].has(end)){
+			return true
+		}
+	}
+	return false
+}
+function invalidMove(start,end){
+	var aristas = window.aristas
+	var vertices = window.vertices
+	if(vertices[end]=="O"){
+		return true
+	}
+	if(Math.abs(start-end)==1 || Math.abs(start-end)==9){
+		if(isAristaAvailable(start,end)){
+			return false
+		}
+	}
+	if(Math.abs(start-end)== 2 || Math.abs(start-end)== 18){
+		if(vertices[start+9]=="O" && end== start+18 && (isAristaAvailable(start,start+9) && isAristaAvailable(start+9,start+18)) ){
+			return false
+		}
+		if(vertices[start-9]=="O" && end== start-18 && (isAristaAvailable(start,start-9) && isAristaAvailable(start-9,start-18)) ){
+			return false
+		}
+		if(vertices[start+1]=="O" && end== start+2 && (isAristaAvailable(start,start+1) && isAristaAvailable(start+1,start+2)) ){
+			return false
+		}
+		if(vertices[start-1]=="O" && end== start-2 && (isAristaAvailable(start,start-1) && isAristaAvailable(start-1,start-2)) ){
+			return false
+		}
+	}
+	return true
+}
+function addWalltoChooseWall(){
+	docoseWall").append
+ntById("chooseWall").appendChild(Wall)
+n() {
+.appendChild(Wall)
+*/	$(Wall).on( "dblclick", function() {
+		if($(Wall).hasClass("horizontalWall")){
+			$(Wall).toggleClass( "verticalWall",true, 0 );
+	  		$(Wall).toggleClass( "horizontalWall",false)
+		}
+		else{
+			$(Wall).toggleClass( "verticalWall",false, 0 );
+	  		$(Wall).toggleClass( "horizontalWall",true,0)
+		}
+    });
+	$(Wall).draggable({
+		containment:$("#table_body"),
+		snap:".vertical_wall_tile",
+		snapTolerance:"10"
+	})
+}
+function dropPawn(event,ui){
+	$(peon_negro).draggable({revert:"invalid"})
+	var table = window.table
+	var start = $(peon_negro).data().origin
+	var end = table.indexOf(event.target)
+	if(invalidMove(start,end)){
+		$(peon_negro).draggable({revert:"valid"})
+	}
+	else{
+		$(peon_negro).data("origin",end)
+		vertices[start]=start
+		vertices[end]="M"
+	}
+}
+function createWallTiles(){
+			x=200+c*65
+		
+
+			wallT.style.t(var c=0;c<8;c++){
+			var wallTile = document.cre.left=x+"px";
+			var o = document.Wall
+			var oo =Wall)
+			var ooo = Wall
+			$(wallTile).droppable({
+				accept:$(Wall),
+				tolerance:"fit",
+				hoverClass:"hover",
+				drop: handleWallDrop
+			})
+			document.body.appendChild(wallTile)
+		}	
+	}
+}
+function handleWallDrop(event,ui){
+	walls_me -=1;
+	if(walls_me>0){
+		addWalltoChooseWall()
+	}
+	$(this).droppable('disable');
+	ui.draggable.draggable( 'disable' );
+}
+function init(){
+	window.vertices = []
+	window.aristas = []
+	var vertices = window.vertices
+	var aristas = window.aristas
+	var table = window.table;
+	for(var i=0;i<81;i++){
+		vertices.push(i);
+	}
+	for(var i=0;i<=8;i++){
+		for(var j=0;j<8;j++){
+			var arista = new Set()
+			arista.add(9*i+j)
+			arista.add(9*i+j+1)
+			aristas.push(arista)
+			var arista = new Set()
+			arista.add(9*i+j)
+			arista.add(9*i+j+9)
+			aristas.push(arista)
+		}
+	}
+	for(var i=1;i<9;i++){
+		var arista = new Set()
+		arista.add(9*i-1)
+		arista.add(9*i+8)
+		aristas.push(arista)
+	}
+	table[25].appendChild(peon_blanco)
+	table[76].appendChild(peon_negro)
+	vertices[25] = "O"
+	vertices[76] = "M"
+	$(peon_negro).draggable({
+		containment: $('#table_body'),
+		grid:[65,65],
+		revertDuration:250
+	}).data("origin",table.indexOf(peon_negro.parentNode))
+	for(var l=0;l<table.length;l++){
+		$(table[l]).droppable({
+			drop: dropPawn,
+			accept: $("#peon_negro")
+		})
+	}
+	addWalltoChooseWall()
+	createWallTiles()
+}
+
+init()
+</script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Untitled Document</title>
+<style>
+	.verticeMe{
+		background-color: black !important;
+	}
+	.verticeAI{
+		background-color: blue !important;
+	}
+	body{
+		font-size: 60px;
+		position: relative;
+	}
+	.vertice{
+		height:20px;
+		width:20px;
+		border-radius: 100%;
+		position: absolute;
+		background-color: coral;
+	}
+	.arista_vertical{
+		height: 30px;
+		width: 7px;
+		background-color: #E6984C;
+		position: absolute;
+	}
+	.arista_horizontal{
+		height: 7px;
+		width: 30px;
+		background-color: #E6984C;
+		position: absolute;
+	}
+
+</style>
+</head>
+
+<body>
+<script>
+function initVertices(vertices){
+	var me = vertices.indexOf("M");
+	var AI = vertices.indexOf("O");
+	for(var y=0;y<9;y++){
+		for(var x=0;x<9;x++){
+			var leftDisp =70+x*60;
+			var topDisp = 30+y*60;
+			var vertice= document.createElement("div");
+			vertice.style.top=topDisp+"px";
+			vertice.style.left=leftDisp+"px";
+			vertice.className="vertice"
+			if(x+y*9 == me){
+				vertice.className += " verticeMe"
+			}
+			if(x+y*9 ==AI ){
+				vertice.className += " verticeAI"
+			}
+			document.body.appendChild(vertice)
+		}
+	}
+}
+function invalidWall(player,vertices,aristas_clone){
+	true
+	
+}
+aristas = []
+for(var i=0;i<8;i++){
+	for(var j=0;j<8;j++){
+		aristas.push([9*i+j,9*i+j+1])
+		aristas.push([9*i+j,9*i+j+9])
+	}
+}
+for(var i=1;i<9;i++){
+	aristas.push([9*i-1,9*i+8])
+	aristas.push([71+i,72+i])
+}
+function displayGraph(aristas){
+	for(var l =0; l<aristas.length; l++){
+		if(aristas[l][1]==aristas[l][0]+1){
+			var arista = document.createElement("div");
+			var fila = Math.floor(aristas[l][0]/9);
+			var columna = Math.floor(aristas[l][0]%9)
+			var topDisp = 37+fila*60;
+			var leftDisp = 95 + columna*60;
+			arista.style.top = topDisp + "px";
+			arista.style.left = leftDisp + "px";
+			arista.className = "arista_horizontal";
+			document.body.appendChild(arista)
+		}
+		if(aristas[l][1]==aristas[l][0]+9){
+			var arista = document.createElement("div");
+			var fila = Math.floor(aristas[l][0]/9);
+			var columna = Math.floor(aristas[l][0]%9)
+			var topDisp = 55+fila*60;
+			var leftDisp = 77 + columna*60;
+			arista.style.top = topDisp + "px";
+			arista.style.left = leftDisp + "px";
+			arista.className = "arista_vertical";
+			document.body.appendChild(arista)
+		}
+	}
+}
+//var vertices = window.opener.vertices_temp
+var vertices = window.opener.vertices;
+//vertices=[]
+//for(var x=0;x<81;x++){
+//	vertices.push(x)
+//}
+initVertices(vertices)
+var lista_pasada = window.opener.aristas
+//var arista_1=[[0, 1], [0, 9], [1, 2], [1, 10], [2, 11], [3, 4], [3, 12], [4, 5], [4, 13], [5, 6], [5, 14], [6, 7], [6, 15], [7, 8], [7, 16], [9, 10], [9, 18], [10, 11], [12, 13], [13, 14], [14, 15], [16, 17], [16, 25], [18, 19], [18, 27], [19, 20], [19, 28], [20, 21], [20, 29], [21, 22], [21, 30], [22, 23], [22, 31], [23, 24], [23, 32], [24, 33], [25, 26], [25, 34], [27, 28], [27, 36], [28, 29], [28, 37], [29, 30], [29, 38], [30, 31], [30, 39], [31, 32], [31, 40], [32, 33], [32, 41], [33, 34], [33, 42], [34, 35], [34, 43], [36, 37], [36, 45], [37, 38], [37, 46], [38, 39], [38, 47], [39, 40], [39, 48], [40, 41], [40, 49], [41, 42], [41, 50], [42, 43], [42, 51], [43, 44], [43, 52], [45, 46], [45, 54], [46, 47], [46, 55], [47, 48], [47, 56], [48, 49], [48, 57], [49, 50], [49, 58], [50, 51], [50, 59], [51, 52], [51, 60], [52, 61], [54, 55], [54, 63], [55, 56], [55, 64], [56, 57], [56, 65], [57, 58], [57, 66], [58, 59], [58, 67], [59, 60], [59, 68], [60, 61], [60, 69], [61, 70], [63, 64], [63, 72], [64, 73], [65, 66], [65, 74], [66, 67], [66, 75], [67, 68], [67, 76], [68, 69], [68, 77], [69, 70], [69, 78], [70, 71], [70, 79], [8, 17], [72, 73], [17, 26], [26, 35], [74, 75], [35, 44], [75, 76], [44, 53], [76, 77], [53, 62], [77, 78], [62, 71], [78, 79], [71, 80], [79, 80]]
+
+//displayGraph(arista_1)
+displayGraph(lista_pasada)
+
+</script>
+</body>
+</html>

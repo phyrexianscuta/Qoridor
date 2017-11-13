@@ -1,0 +1,1103 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Untitled Document</title>
+<style>
+	.congratulations_win{
+		color: steelblue;
+		font-size: 25px;
+		text-align: center;
+		text-shadow: 1px 1px aliceblue;
+	}
+	.congratulations_lose{
+		font-size: 25px;
+		text-align: center;
+		text-shadow: 1px 1px 1px aliceblue;
+		color: steelblue;
+	}
+	#message_thinking{
+		font-size: 25px;
+		display: none;
+	}
+	#messages{
+		width: 250px;
+		height: 150px;
+		float:left;
+		margin-top: -380px;
+		margin-left: 842px;
+		display: inline-block;
+		background-color: antiquewhite;
+		border: 1px solid red;
+	}
+	#boton{
+		position: absolute;
+		top: 100px;
+		left: 849px;
+	}
+	#game_table{
+		display: block;
+	}
+	.horizontalWall{
+		width:110px;
+		height:17px;
+		background-color: #711905;
+		z-index:1;
+		margin-top: 1px;
+		box-shadow: 1px 1px 1px 1px grey
+	}
+	.verticalWall{
+		width:17px;
+		height: 110px;
+		background-color:#711905;
+		z-index:1;
+		box-shadow: 1px 1px 1px 1px grey;
+		margin-left: 40px;
+		margin-top: -40px
+	}
+	.verticalWallInBoard{
+		width:17px;
+		height: 110px;
+		background-color:#711905;
+		z-index:1;
+		box-shadow: 1px 1px 1px 1px grey;
+	}
+	.horizontal_wall_tile{
+		width:110px;
+		height:18px;
+		position:absolute;
+		padding-left:0px;
+	}
+	.vertical_wall_tile{
+		width:17px;
+		height:110px;
+		position:absolute;
+		padding-right: -1px;
+		padding-left:0px;
+	}
+	#walls{
+		height:250px;
+		width:200px;
+		border-radius: 5xp;
+		border:1px solid grey;
+		position: absolute;
+		top: 150px;
+		left: 850px;
+		display: block;
+	}
+	#walls h4{
+		margin-top:0px;
+		width: 130px;
+		display: inline-block
+	}
+	#AIwallscounter{
+		width: 30px;
+		display: inline-block
+	}
+	#wallscounter{
+		width: 30px;
+		display: inline-block
+	}
+	#chooseWall{
+		height: 70px;
+		width: 130px;
+		align-content: center;
+		margin-left: 20px;
+		padding-left:30px;
+		padding-top: 30px;
+	}
+	document{
+		font-family: roboto;
+	}
+	.table_header div:nth-child(1){
+		background-color: #976729;
+	}
+	.table_header div:nth-child(n+2){
+		background-color: #38260F;
+	}
+	.table_header div:nth-last-child(1){
+		background-color: #976729;
+	}
+	#table_body div{
+		background-color: #DFBA8A;
+		width: 45px;
+		height: 45px;
+		display: block;
+		float: left;
+		margin: 10px;
+	}
+	.table_header div{
+		width: 45px;
+		height: 45px;
+		display: block;
+		float: left;
+		margin: 10px;
+		font-size: 20px;
+		color: aliceblue;
+		text-align: center;
+	}
+	#table{
+		border: 1px solid black;
+		width:730px;
+		height: 810px;
+		position: relative;
+		margin-left: 80px;
+		background-color: antiquewhite
+	}
+	.table_header{
+		height:60px;
+		width:770px;
+		margin-left: 5px
+	}
+	#table_body{
+		width: 585px;
+		height: 590px;
+		margin-left: 70px;
+		margin-top: 15px
+	}
+	#table_header_bottom{
+		position: absolute;
+		bottom: 50px
+	}
+	#table_header_top{
+		margin-top: 30px;
+	}
+	.separacion{
+		height: 16px;
+		width: 565px;
+		display: inline-block;
+		position: absolute;
+		background-color:gray;
+		left: 80px;
+	}
+	#separacion_top{
+		top:90px;
+
+	}
+	#separacion_bottom{
+		bottom:108px;
+	}
+	.peon{
+		margin-left: 7px;
+		margin-top: 0px;
+	}
+	#peon_negro{
+	}
+	.hover{
+		background-color: red !important
+	}
+</style>
+<script>
+	var peon_blanco = document.createElement('img')
+	var peon_negro = document.createElement('img')
+	var	vertices=[]
+	var aristasTemp = []
+	var aristas = []
+	var table= []
+	var wall_vertical_tiles = []
+	var wall_vertical_tiles_abstract = []
+	var wall_horizontal_tiles = []
+	var wall_horizontal_tiles_abstract = []
+	var walls_opp = 10
+	var walls_me  = 10
+	peon_blanco.src = 'peon_blanco2.png'
+	peon_blanco.className ='peon'
+	peon_blanco.id='peon_blanco'
+	peon_negro.src = 'peon_negro2.png'
+	peon_negro.className ='peon'
+	peon_negro.id='peon_negro'
+	
+	function shuffle(array){
+  		var currentIndex = array.length, temporaryValue, randomIndex;
+  		while (0 !== currentIndex) {
+			randomIndex = Math.floor(Math.random() * currentIndex);
+			currentIndex -= 1;
+			temporaryValue = array[currentIndex];
+			array[currentIndex] = array[randomIndex];
+			array[randomIndex] = temporaryValue;
+		}
+  	return array;
+	}
+</script>
+</head>
+
+<body>
+<div id="game_table">
+	<div id="table">
+		<div class="table_header" id ="table_header_top">
+				<div>
+					
+				</div>
+				<div>
+					1
+				</div>
+				<div>
+					2
+				</div>
+				<div>
+					3
+				</div>
+				<div>
+					4
+				</div>
+				<div>
+					5
+				</div>	
+				<div>
+					6
+				</div>
+				<div>
+					7
+				</div>
+				<div>
+					8
+				</div>
+				<div>
+					9
+				</div>
+				<div>
+						
+				</div>
+		</div>
+		<div class="separacion" id="separacion_top"> </div>
+		<div id="table_body"> </div>
+		<div class="separacion" id="separacion_bottom"> </div>
+		<div class="table_header" id ="table_header_bottom">
+				<div>
+					
+				</div>
+				<div>
+					1
+				</div>
+				<div>
+					2
+				</div>
+				<div>
+					3
+				</div>
+				<div>
+					4
+				</div>
+				<div>
+					5
+				</div>	
+				<div>
+					6
+				</div>
+				<div>
+					7
+				</div>
+				<div>
+					8
+				</div>
+				<div>
+					9
+				</div>
+				<div>
+					
+				</div>
+		</div>
+	</div>	
+	<div id="walls"> 
+		<h3>Walls</h3>
+		<h4>Your walls left:</h4> <div id="wallscounter">10</div>
+		<h4>AI walls left:</h4> <div id="AIwallscounter">10</div>
+		<div id="chooseWall"></div>
+	</div>
+	<div id="messages">
+	</div>
+</div>
+<input type="button" onClick="displayGraph2()" value="dibujar grafo" id="boton">
+<script src="jquery-3.2.1.min.js"></script>
+<script src="jquery-ui-1.12.1/jquery-ui.js"></script>
+<script>
+var table_body = document.getElementById("table_body")
+for(var f=0; f<=8;f++){
+	for(var c=0;c<=8;c++){
+		var cell = document.createElement("DIV");
+		table.push(cell);
+		table_body.appendChild(cell);
+	}
+}
+function win(){
+	$(peon_negro).draggable("disable")
+	$(Wall).draggable("disable")
+	var congratulations = document.createElement("p")
+	congratulations.innerHTML="Yay, you won the game!"
+	congratulations.className="congratulations_win"
+	document.getElementById("messages").innerHTML=""
+	document.getElementById("messages").appendChild(congratulations);
+}
+function lose(){
+	$(peon_negro).draggable("disable");
+	$(Wall).draggable("disable");
+	var congratulations_lose = document.createElement("p");
+	congratulations_lose.innerHTML="Uh oh, you lost :-(";
+	congratulations_lose.className="congratulations_lose";
+	document.getElementById("messages").innerHTML="";
+	document.getElementById("messages").appendChild(congratulations_lose);
+}
+function indexOf(lookFor,array){
+	for (var k=0;k<array.length;k++){
+		if(lookFor[0]==array[k][0] && lookFor[1] == array[k][1]){
+			return k
+		}
+	}
+	return -1
+}
+function isAristaAvailable(start,end,aristas){
+	for ( var l=0;l<aristas.length;l++){
+		if(aristas[l].includes(start) && aristas[l].includes(end)){
+			return true
+		}
+	}
+	return false
+}
+function invalidMove(player,start,end,vertices,aristas){
+	if(player=="M"){
+		var opp = "O"
+	}
+	else{
+		var opp = "M"
+	}
+	if(vertices[end]==opp){
+		return true
+	}
+	if(Math.abs(start-end)==1 || Math.abs(start-end)==9){
+		if(isAristaAvailable(start,end,aristas)){
+			return false
+		}
+	}
+	if(Math.abs(start-end)== 2 || Math.abs(start-end)== 18){
+		if(vertices[start+9]==opp && end== start+18 && isAristaAvailable(start,start+9,aristas) && isAristaAvailable(start+9,start+18,aristas)){
+			return false
+		}
+		if(vertices[start-9]==opp && end== start-18 && isAristaAvailable(start,start-9,aristas) && isAristaAvailable(start-9,start-18,aristas)){
+			return false
+		}
+		if(vertices[start+1]==opp && end== start+2 && isAristaAvailable(start,start+1,aristas) && isAristaAvailable(start+1,start+2,aristas)){
+			return false
+		}
+		if(vertices[start-1]==opp && end== start-2 && isAristaAvailable(start,start-1,aristas) && isAristaAvailable(start-1,start-2,aristas)){
+			return false
+		}
+	}
+	if(end==start+10 && vertices[start+1]==opp && isAristaAvailable(start,start+1,aristas) && isAristaAvailable(start+1,start+10,aristas) && !isAristaAvailable(start+1,start+2,aristas) ){
+		return false
+	}
+	if(end==start+10 && vertices[start+9]==opp && isAristaAvailable(start,start+9,aristas) && isAristaAvailable(start+9,start+10,aristas) && !isAristaAvailable(start+9,start+18,aristas) ){
+		return false
+	}
+	if(end==start+8 && vertices[start+9]==opp && isAristaAvailable(start,start+9,aristas) && isAristaAvailable(start+8,start+9,aristas) && !isAristaAvailable(start+9,start+18,aristas) ){
+		return false
+	}
+	if(end==start+8 && vertices[start-1]==opp && isAristaAvailable(start,start-1,aristas) && isAristaAvailable(start-1,start+8,aristas) && !isAristaAvailable(start-1,start-2,aristas) ){
+		return false
+	}
+	if(end==start-10 && vertices[start-1]==opp && isAristaAvailable(start,start-1,aristas) && isAristaAvailable(start-1,start-10,aristas) && !isAristaAvailable(start-1,start-2,aristas) ){
+		return false
+	}
+	if(end==start-10 && vertices[start-9]==opp && isAristaAvailable(start,start-9,aristas) && isAristaAvailable(start-9,start-10,aristas) && !isAristaAvailable(start-9,start-18,aristas) ){
+		return false
+	}
+	if(end==start-8 && vertices[start-9]==opp && isAristaAvailable(start,start-9,aristas) && isAristaAvailable(start-9,start-8,aristas) && !isAristaAvailable(start-9,start-18,aristas) ){
+		return false
+	}
+	if(end==start-8 && vertices[start+1]==opp && isAristaAvailable(start,start+1,aristas) && isAristaAvailable(start+1,start-8,aristas) && !isAristaAvailable(start+1,start+2,aristas) ){
+		return false
+	}
+	return true
+}
+function invalidWall(vertices,aristas_clone){
+		return (!checkAbleReachGoal("O",vertices,aristas_clone) || !checkAbleReachGoal("M",vertices,aristas_clone))
+}
+function topLeftVertex(n){
+	var top_Vertex = n + Math.floor(n/8)
+	return top_Vertex
+}
+function findAdjacentNodes(vertice,aristas){
+	var neighbors = []
+	for (var i=0;i<aristas.length;i++){
+		if(aristas[i][0]==vertice){
+			neighbors.push(aristas[i][1])
+		}
+		else if(aristas[i][1]==vertice){
+			neighbors.push(aristas[i][0])
+		}
+	}
+	return neighbors
+}
+function checkAbleReachGoal(player,vertices,aristas){
+	var toDoSet = []
+	var doneSet = []
+	var goal = []
+	if(player=="O"){
+		goal = [72,73,74,75,76,77,78,79,80]
+	}
+	else if(player == "M"){
+		goal = [0,1,2,3,4,5,6,7,8]
+	}
+	var source = vertices.indexOf(player)
+	toDoSet.push(source)
+	while(toDoSet.length>0){
+		var currentNode=toDoSet[0]
+		doneSet.push(currentNode)
+		toDoSet.splice(0,1)
+		var neighbors = findAdjacentNodes(currentNode,aristas)
+		for(var j=0;j<neighbors.length;j++){
+			if(goal.indexOf(neighbors[j])>-1){
+				return true
+			}
+			if(doneSet.indexOf(neighbors[j])==-1 && toDoSet.indexOf(neighbors[j])==-1 ){
+				toDoSet.push(neighbors[j])
+			}
+		}
+	}
+	return false
+}
+function displayGraph2(){
+	var newWindow = window.open("prueba_grafo.html","dibujografo")
+	window.aristasTemp = window.aristas;
+	window.verticesTemp = window.vertices;
+}
+function addWalltoChooseWall(){
+	document.getElementById("chooseWall").innerHTML=""
+	Wall = document.createElement("DIV")
+	Wall.className = "horizontalWall"
+	document.getElementById("chooseWall").appendChild(Wall)
+	$(Wall).on( "dblclick", function() {
+		if($(Wall).hasClass("horizontalWall")){
+			$(Wall).toggleClass( "verticalWall",true, 0 );
+	  		$(Wall).toggleClass( "horizontalWall",false)
+			$(Wall).draggable("option","snap",".vertical_wall_tile")
+		}
+		else{
+			$(Wall).toggleClass( "verticalWall",false, 0 );
+	  		$(Wall).toggleClass( "horizontalWall",true,0)
+			$(Wall).draggable("option","snap",".horizontal_wall_tile")
+		}
+    });
+	$(Wall).draggable({
+		containment:$("#game_table"),
+		snap:".horizontal_wall_tile",
+		snapTolerance:"10",
+		snapMode: "inner",
+	})
+}
+function dropPawn(event,ui){
+	$(peon_negro).draggable({revert:"invalid"})
+	var table = window.table
+	var start = $(peon_negro).data().origin
+	var end = table.indexOf(event.target)
+	if(invalidMove("M",start,end,vertices,aristas)){
+		$(peon_negro).draggable({revert:"valid"})
+	}
+	else{
+		$(peon_negro).data("origin",end)
+		vertices[start]=start
+		vertices[end]="M"
+		table[start].innerHTML=""
+		table[end].appendChild(peon_negro)
+		if(winningPosition("M",vertices,aristas)){
+			win()
+		}
+		else{
+			AI()
+		}
+	}
+}
+function createVerticalWallTiles(){
+	for(r=0;r<8;r++){
+		for(c=0;c<8;c++){
+			var wallTile = document.createElement("div");
+			wallTile.className="vertical_wall_tile";
+			x = 215+c*65;
+			y = 124+r*65;
+			wallTile.style.top= y+"px";
+			wallTile.style.left = x+"px";
+			$(wallTile).droppable({
+				accept: ".verticalWall",
+				tolerance:"fit",
+				hoverClass:"hover",
+				drop: handleWallDropVertical
+			});
+			document.body.appendChild(wallTile);
+			window.wall_vertical_tiles.push(wallTile);
+			window.wall_vertical_tiles_abstract.push(0)
+		}
+	}
+}
+function createHorizontalWallTiles(){
+	for(r=0;r<8;r++){
+		for(c=0;c<8;c++){
+			var wallTile = document.createElement("div");
+			wallTile.className="horizontal_wall_tile";
+			x = 169+c*65;
+			y = 169+r*65;
+			wallTile.style.top= y+"px";
+			wallTile.style.left = x+"px";
+			$(wallTile).droppable({
+				accept: ".horizontalWall",
+				tolerance:"fit",
+				hoverClass:"hover",
+				drop: handleWallDropHorizontal
+			});
+			document.body.appendChild(wallTile);
+			window.wall_horizontal_tiles.push(wallTile);
+			window.wall_horizontal_tiles_abstract.push(0)
+		}	
+	}
+}
+function handleWallDropHorizontal(event,ui){
+	var horizontalTiles=window.wall_horizontal_tiles;
+	var verticalTiles = window.wall_vertical_tiles;
+	var index = horizontalTiles.indexOf(this);
+	var inside = document.createElement("DIV");
+	var aristas= window.aristas;
+	vertex_top_left = Math.floor(index/8)+index;
+	var aristas_clone = aristas.slice();
+	aristas_clone.splice(indexOf([vertex_top_left,vertex_top_left+9],aristas_clone), 1);
+	aristas_clone.splice(indexOf([vertex_top_left+1,vertex_top_left+10],aristas_clone), 1);
+	if(invalidWall(vertices,aristas_clone)){
+		alert("Both player must always be able to reach the other side.")
+		return false
+	}
+	walls_me -=1;
+	if(walls_me>0){
+		addWalltoChooseWall()
+	}
+	$(this).droppable('disable');
+	window.wall_horizontal_tiles_abstract[index] = 1
+	if(index+1<65 && Math.floor(index/8) == Math.floor((index+1)/8)){
+		$(horizontalTiles[index+1]).droppable('disable');
+		window.wall_horizontal_tiles_abstract[index+1] = 1
+	}
+	if(index-1>=0 && Math.floor(index/8) == Math.floor((index-1)/8)){
+		$(horizontalTiles[index-1]).droppable('disable');
+		window.wall_horizontal_tiles_abstract[index-1] = 1;
+	}
+	$(verticalTiles[index]).droppable('disable');
+	window.wall_vertical_tiles_abstract[index] = 1;
+	ui.draggable.draggable( 'disable' );
+	inside.className="horizontalWall";
+	$(this).append(inside);
+	aristas.splice(indexOf([vertex_top_left,vertex_top_left+9],aristas), 1);
+	aristas.splice(indexOf([vertex_top_left+1,vertex_top_left+10],aristas), 1);
+	document.getElementById("wallscounter").innerHTML=window.walls_me;
+	AI();
+}
+function handleWallDropVertical(event,ui){
+	var verticalTiles = window.wall_vertical_tiles;
+	var horizontalTiles = window.wall_horizontal_tiles;
+	var index = verticalTiles.indexOf(this);
+	var inside = document.createElement("DIV");
+	var aristas = window.aristas;
+	var vertices = window.vertices;
+	vertex_top_left = Math.floor(index/8)+index;
+	var aristas_clone = aristas.slice();
+	aristas_clone.splice(indexOf([vertex_top_left,vertex_top_left+1],aristas_clone), 1);
+	aristas_clone.splice(indexOf([vertex_top_left+9,vertex_top_left+10],aristas_clone), 1);
+	if(invalidWall(vertices,aristas_clone)){
+		alert("You can't block your opponent with walls")
+		return false
+	}
+	walls_me -=1;
+	if(walls_me>0){
+		addWalltoChooseWall();
+	}
+	$(this).droppable('disable');
+	window.wall_vertical_tiles_abstract[index] =1;
+	if(index+8<65){
+		$(verticalTiles[index+8]).droppable('disable');
+		window.wall_vertical_tiles_abstract[index+8] =1;
+	}
+	if(index-8>=0){
+		$(verticalTiles[index-8]).droppable('disable');
+		window.wall_vertical_tiles_abstract[index-8] =1;
+	}
+	$(horizontalTiles[index]).droppable('disable')
+	window.wall_horizontal_tiles_abstract[index] = 1
+	ui.draggable.draggable( 'disable' );
+	inside.className="verticalWallInBoard"
+	$(this).append(inside)
+	aristas.splice(indexOf([vertex_top_left,vertex_top_left+1],aristas), 1)
+	aristas.splice(indexOf([vertex_top_left+9,vertex_top_left+10],aristas), 1)
+	document.getElementById("wallscounter").innerHTML=window.walls_me;
+	AI()
+}
+function winningPosition(player,vertices,aristas){
+	if(player=="M"){
+		var location = vertices.indexOf("M");
+		if([0,1,2,3,4,5,6,7,8].indexOf(location)>-1){
+			return true
+		}
+		return false
+	}
+	else if(player=="O"){
+		var location = vertices.indexOf("O");
+		if([72,73,74,75,76,77,78,79,80].indexOf(location)>-1){
+			return true
+		}
+		return false
+	}
+}
+function reachedOppositeSide(player,visited){
+	if(player=="M"){
+		var oppositeSide = [0,1,2,3,4,5,6,7,8]
+	}
+	else if(player=="O"){
+		var oppositeSide = [80,79,78,77,76,75,74,73,72]
+	}
+	for (var i=0; i <visited.length;i++){
+		if( oppositeSide.indexOf(visited[i].index) > -1 ){
+			return true
+		}
+	}
+	return false
+}
+function reachedNextRow(player,visited,nextRow){
+	for (var i=0; i <visited.length;i++){
+		if( nextRow.indexOf(visited[i].index) > -1 ){
+			return true
+		}
+	}
+	return false
+}
+function leastDistance(nodes,visited){
+	var minDistance = 999;
+	for (var i=0; i<nodes.length;i++){
+		if(visited.indexOf( nodes[i])==-1 && nodes[i].distance < minDistance ){
+			minDistance = nodes[i].distance;
+			var minNode = nodes[i];
+		}
+	}
+	return minNode
+}
+function nonVisitedNeighbors(currentNode,visited,Nodes,aristas){
+	var array = [];
+	var neighbors = findAdjacentNodes(currentNode.index,aristas)
+	for(var l=0; l<neighbors.length; l++){
+		if( visited.indexOf(Nodes[neighbors[l]]) == -1){
+			array.push(Nodes[neighbors[l]])
+		}
+	}
+	return array
+}
+function DijstrakNextRow(numberRow,player,vertices,aristas){
+	var Nodes = []
+	var source = vertices.indexOf(player);
+	for (var i=0;i<81;i++){
+		var nodo = new Object();
+		nodo.index = i;
+		if(i==source){
+			nodo.distance = 0;
+		}
+		else{
+			if( isAristaAvailable(nodo.index,source,aristas) ){
+				nodo.distance = 1;
+			}
+			else{
+				nodo.distance=999;
+			}
+		}
+		Nodes.push(nodo);
+	}
+	var visited = [];
+	visited.push(Nodes[source]);
+	nextRow = [];
+	if(player=="O" ){
+		for(var x=9*(numberRow+1) ; x<=9*(numberRow+1)+8;x++ ){
+			if( x<81 ){
+				nextRow.push(x);
+			}
+		}
+	}
+	else{
+		for(var x= 9*(numberRow-1 ); x< 9*numberRow;x++ ){
+			if(x>-1){
+				nextRow.push(x);
+			}
+		}
+	}
+	while( visited.length < vertices.length  && !reachedNextRow(player,visited,nextRow) ){
+		var currentNode = leastDistance(Nodes,visited);
+		visited.push(currentNode);
+		var nodesVisit = nonVisitedNeighbors(currentNode,visited,Nodes,aristas);
+		for (var i=0;i<nodesVisit.length;i++ ){
+			nodesVisit[i].distance = Math.min(nodesVisit[i].distance, currentNode.distance + 1);
+		}
+	}
+	if(player=="O"){	
+			distanceAI =[]
+			for(var j=0; j<9;j++){
+				distanceAI.push(Nodes[nextRow[j]].distance);
+			}
+		return Math.min(...distanceAI)
+	}
+	else if(player=="M"){	
+			distanceMe =[]
+			for(var j=0; j<9;j++){
+				distanceMe.push(Nodes[nextRow[j]].distance);
+			}
+		return Math.min(...distanceMe)
+	}
+}
+
+function Dijstrak(player,vertices,aristas){
+	var Nodes = []
+	var source = vertices.indexOf(player);
+	for (var i=0;i<81;i++){
+		var nodo = new Object();
+		nodo.index = i;
+		if(i==source){
+			nodo.distance = 0;
+		}
+		else{
+			if( isAristaAvailable(nodo.index,source,aristas) ){
+				nodo.distance = 1;
+			}
+			else{
+				nodo.distance=999;
+			}
+		}
+		Nodes.push(nodo);
+	}
+	var visited = [];
+	visited.push(Nodes[source]);
+	while( visited.length < vertices.length  && !reachedOppositeSide(player,visited) 
+		 ){
+		var currentNode = leastDistance(Nodes,visited);
+		visited.push(currentNode);
+		var nodesVisit = nonVisitedNeighbors(currentNode,visited,Nodes,aristas);
+		for (var i=0;i<nodesVisit.length;i++ ){
+			nodesVisit[i].distance = Math.min(nodesVisit[i].distance, currentNode.distance + 1);
+		}
+	}
+	if(player=="O"){	return Math.min(Nodes[72].distance,Nodes[73].distance,Nodes[74].distance,Nodes[75].distance,Nodes[76].distance,Nodes[77].distance,Nodes[78].distance,Nodes[79].distance,Nodes[80].distance)
+	}
+	else if(player=="M"){	return Math.min(Nodes[0].distance,Nodes[1].distance,Nodes[2].distance,Nodes[3].distance,Nodes[4].distance,Nodes[5].distance,Nodes[6].distance,Nodes[7].distance,Nodes[8].distance)
+	}
+}
+function evaluatingfunction(vertices,aristas){
+	var distAI = Dijstrak("O",vertices,aristas)
+	var distMe = Dijstrak("M",vertices,aristas)
+	var movesToNextRowAI = movesToNextRow("O",vertices,aristas)
+	return distMe - distAI
+}
+
+function movesToNextRow(player,vertices,aristas){
+	var start = vertices.indexOf(player);
+	var currentRow = Math.floor(start/9);
+	if (player=="O"){
+		return DijstrakNextRow(currentRow,"O",vertices,aristas)
+	}
+	else{
+		return DijstrakNextRow(currentRow,"M",vertices,aristas)
+	}
+}
+function minimax(player,vertices,aristas,wall_vertical_abstract,wall_horizontal_abstract,depth,alpha,beta,walls_me,walls_opp){
+	depth +=1;
+	if(winningPosition("M",vertices,aristas)){
+		var x = new Object()
+		x.score = depth-100
+		return x
+	}
+	else if(winningPosition("O",vertices,aristas)){
+		var x = new Object();
+		x.score = 100-depth;
+		return x
+	}
+	else if(depth==3){
+		var x = new Object();
+		var ev = evaluatingfunction(vertices,aristas);
+		x.score = ev;
+		return x
+	}
+	var avMoves = availableMoves(player,vertices,aristas,walls_me,walls_opp,wall_vertical_abstract,wall_horizontal_abstract);
+	avMoves = shuffle(avMoves)
+	var bestMove = new Object();
+	if(player=="M"){
+		bestMove.score = 999;
+		for(var l=0;l< avMoves.length;l++){
+			var move= new Object();
+			var copia_aristas = aristas.slice();
+			var copia_vertices = vertices.slice();
+			var wall_vert_abst_copy = wall_vertical_tiles_abstract.slice();
+			var wall_horiz_abst_copy = wall_horizontal_abstract.slice();
+			var walls_me_copy = walls_me;
+			var walls_opp_copy = walls_opp;
+			if(avMoves[l].kind== "P"){
+				move.kind="P";
+				move.index = vertices.indexOf(avMoves[l].index);
+				var start = copia_vertices.indexOf(player);
+				copia_vertices[start] = start;
+				copia_vertices[move.index] = player;
+			}
+			else if(avMoves[l].kind== "HW"){
+				move.kind="HW";
+				move.index = avMoves[l].index;
+				wall_horiz_abst_copy[move.index] = 1;
+				walls_me_copy -= 1
+				if(move.index+1<65 && Math.floor(move.index/8) == Math.floor((move.index+1)/8)){
+					wall_horiz_abst_copy[move.index+1] = 1;
+				}
+				if(move.index-1>=0 && Math.floor(move.index/8) == Math.floor((move.index-1)/8)){
+					wall_horiz_abst_copy[move.index-1] = 1;
+				}
+				wall_vert_abst_copy[move.index] =1;
+				var vertex_top_left = topLeftVertex(move.index);
+				copia_aristas.splice(indexOf([vertex_top_left,vertex_top_left+9],copia_aristas), 1);
+				copia_aristas.splice(indexOf([vertex_top_left+1,vertex_top_left+10],copia_aristas), 1);
+				
+			}
+			else if(avMoves[l].kind="VW"){
+				move.kind="VW";
+				move.index = avMoves[l].index;
+				wall_vert_abst_copy[move.index] = 1;
+				walls_me_copy -= 1
+				if(move.index+8<65){
+					wall_vert_abst_copy[move.index+8] = 1;
+				}
+				if(move.index-8>=0){
+					wall_vert_abst_copy[move.index-8] = 1;
+				}
+				wall_horiz_abst_copy[move.index] = 1;
+				var vertex_top_left = topLeftVertex(move.index);
+				copia_aristas.splice(indexOf([vertex_top_left,vertex_top_left+1],copia_aristas), 1);
+				copia_aristas.splice(indexOf([vertex_top_left+9,vertex_top_left+10],copia_aristas), 1);
+			}
+			var result=minimax("O",copia_vertices,copia_aristas,wall_vert_abst_copy,wall_horiz_abst_copy,depth,alpha,beta,walls_me_copy,walls_opp_copy);
+			move.score = result.score;
+			if(move.score < bestMove.score){
+				bestMove.index = move.index;
+				bestMove.score = move.score;
+				bestMove.kind = move.kind;
+			}
+			beta = Math.min(beta,bestMove.score);
+			if(beta <= alpha){
+				break
+			}
+		}
+		return bestMove
+	}
+	else if(player=="O"){
+		bestMove.score =-999
+		for(var l=0;l< avMoves.length;l++){
+			var move= new Object();
+			var copia_aristas = aristas.slice()
+			var copia_vertices = vertices.slice()
+			var wall_vert_abst_copy = wall_vertical_tiles_abstract.slice()
+			var wall_horiz_abst_copy = wall_horizontal_abstract.slice()
+			var walls_me_copy = walls_me
+			var walls_opp_copy = walls_opp
+			if(avMoves[l].kind== "P"){
+				move.kind="P";
+				move.index = vertices.indexOf(avMoves[l].index)
+				var start = copia_vertices.indexOf(player);
+				copia_vertices[start] = start;
+				copia_vertices[move.index] = player;
+			}
+			else if(avMoves[l].kind== "HW"){
+				move.kind="HW";
+				move.index = avMoves[l].index;
+				wall_horiz_abst_copy[move.index] = 1;
+				walls_opp_copy -= 1;
+				if(move.index+1<65 && Math.floor(move.index/8) == Math.floor((move.index+1)/8)){
+					wall_horiz_abst_copy[move.index+1] = 1;
+				}
+				if(move.index-1>=0 && Math.floor(move.index/8) == Math.floor((move.index-1)/8)){
+					wall_horiz_abst_copy[move.index-1] = 1;
+				}
+				wall_vert_abst_copy[move.index] =1;
+				var vertex_top_left = topLeftVertex(move.index);
+				copia_aristas.splice(indexOf([vertex_top_left,vertex_top_left+9],copia_aristas), 1);
+				copia_aristas.splice(indexOf([vertex_top_left+1,vertex_top_left+10],copia_aristas), 1);
+			}
+			else if(avMoves[l].kind="VW"){
+				move.kind="VW";
+				move.index = avMoves[l].index;
+				wall_vert_abst_copy[move.index] = 1;
+				walls_opp_copy -= 1;
+				if(move.index+8<65){
+					wall_vert_abst_copy[move.index+8] = 1;
+				}
+				if(move.index-8>=0){
+					wall_vert_abst_copy[move.index-8] = 1;
+				}
+				wall_horiz_abst_copy[move.index] = 1;
+				var vertex_top_left = topLeftVertex(move.index);
+				copia_aristas.splice(indexOf([vertex_top_left,vertex_top_left+1],copia_aristas), 1);
+				copia_aristas.splice(indexOf([vertex_top_left+9,vertex_top_left+10],copia_aristas), 1);
+			}
+			var result=minimax("M",copia_vertices,copia_aristas,wall_vert_abst_copy,wall_horiz_abst_copy,depth,alpha,beta,walls_me_copy,walls_opp_copy);
+			move.score = result.score;
+			if(move.score > bestMove.score){
+				bestMove.index = move.index;
+				bestMove.score = move.score;
+				bestMove.kind = move.kind;
+			}
+			alpha = Math.max(alpha,bestMove.score);
+			if(beta <= alpha){
+				break
+			}
+		}
+		return bestMove
+	}
+}
+function availableMoves(player,vertices,aristas,walls_me,walls_opp,verticalTiles,horizontalTiles){
+	var avMoves = [];
+	var start = vertices.indexOf(player);
+	if(player=="O"){
+		var numberwalls = walls_opp;
+	}
+	else if(player=="M"){
+		var numberwalls = walls_me;
+	}
+	for(var i=0; i <81;i++){
+		if(!invalidMove(player,start,vertices[i],vertices,aristas) ){
+			var move = new Object();
+			move.kind ="P";
+			move.index= vertices[i];
+			avMoves.push(move)
+		}
+	}
+	for(var i=0; i< horizontalTiles.length;i++){
+		if(horizontalTiles[i]==0  && numberwalls>0){ 
+			var copia_aristas = aristas.slice();
+			var vertex_top_left = topLeftVertex(i);
+			copia_aristas.splice(indexOf([vertex_top_left,vertex_top_left+9],copia_aristas), 1);
+			copia_aristas.splice(indexOf([vertex_top_left+1,vertex_top_left+10],copia_aristas), 1);
+			if(!invalidWall(vertices,copia_aristas) &&  !invalidWall(vertices,copia_aristas) ){
+				var move = new Object();
+				move.kind="HW";
+				move.index= i;
+				avMoves.push(move);
+			}
+		}
+	}
+	for(var i=0; i< verticalTiles.length;i++){
+		if(verticalTiles[i]==0 && numberwalls>0){
+			var copia_aristas = aristas.slice();
+			var vertex_top_left = topLeftVertex(i);
+			copia_aristas.splice(indexOf([vertex_top_left,vertex_top_left+1],copia_aristas), 1);
+			copia_aristas.splice(indexOf([vertex_top_left+9,vertex_top_left+10],copia_aristas), 1);
+			if(!invalidWall(vertices,copia_aristas) &&  !invalidWall(vertices,copia_aristas) ){
+				var move = new Object();
+				move.kind="VW";
+				move.index= i;
+				avMoves.push(move);
+			}
+		}
+	}
+	return avMoves
+}
+function AI(){
+//	$(peon_negro).draggable("disable");
+//	$(Wall).draggable("disable");
+	var vertices = window.vertices;
+	var aristas = window.aristas;
+	var wall_vertical_abstract = window.wall_vertical_tiles_abstract;
+	var wall_horizontal_abstract = window.wall_horizontal_tiles_abstract;
+	var verticalTiles = window.wall_vertical_tiles;
+	var horizontalTiles = window.wall_horizontal_tiles;
+	if(window.walls_opp>0){
+		var bestMove = minimax("O",vertices,aristas,wall_vertical_abstract,wall_horizontal_abstract,0,-99999,+99999,walls_me,walls_opp);
+	}
+	else{
+		var bestMove = minimax("O",vertices,aristas,wall_vertical_abstract,wall_horizontal_abstract,-1,-99999,+99999,walls_me,walls_opp)
+	}
+	if(bestMove.kind[1] == "W"){
+		var indexBM = topLeftVertex(bestMove.index);
+		window.walls_opp -=1
+		document.getElementById("AIwallscounter").innerHTML=window.walls_opp;
+		if(bestMove.kind[0] =="H"){
+			var wallInside = document.createElement("DIV");
+			wallInside.className="horizontalWall";
+			horizontalTiles[bestMove.index].appendChild(wallInside);
+			wall_horizontal_abstract[bestMove.index] = 1;
+			if(bestMove.index+1<65 && Math.floor(bestMove.index/8) == Math.floor((bestMove.index+1)/8)){
+				wall_horizontal_abstract[bestMove.index+1] = 1;
+			}
+			if(bestMove.index-1>=0 && Math.floor(bestMove.index/8) == Math.floor((bestMove.index-1)/8)){
+				wall_horizontal_abstract[bestMove.index-1] = 1;
+			}
+			wall_vertical_abstract[bestMove.index] =1;
+			aristas.splice(indexOf([indexBM,indexBM+9],aristas), 1);
+			aristas.splice(indexOf([indexBM+1,indexBM+10],aristas), 1);
+
+		}
+		else{
+			var wallInside = document.createElement("DIV");
+			wallInside.className="verticalWallInBoard";
+			verticalTiles[bestMove.index].appendChild(wallInside);
+			wall_vertical_abstract[bestMove.index] = 1
+			if(bestMove.index+8<65){
+				wall_vertical_abstract[bestMove.index+8] = 1;
+			}
+			if(bestMove.index-8>=0){
+				wall_vertical_abstract[bestMove.index-8] = 1;
+			}
+			wall_horizontal_abstract[bestMove.index] = 1;
+			aristas.splice(indexOf([indexBM,indexBM+1],aristas), 1)
+			aristas.splice(indexOf([indexBM+9,indexBM+10],aristas), 1)
+		}
+	}
+	else{
+		var start = vertices.indexOf("O")
+		vertices[start] = start
+		vertices[bestMove.index] = "O"
+		table[bestMove.index].appendChild(peon_blanco)
+		table[start].innerHTML=""
+		if(winningPosition("O",vertices,aristas)){
+			lose()
+		}
+	}
+//	$(peon_negro).draggable("enable")
+//	$(Wall).draggable("enable")
+}
+function init(){
+	window.vertices = []
+	window.aristas = []
+	var vertices = window.vertices
+	var aristas = window.aristas
+	var table = window.table;
+	for(var i=0;i<81;i++){
+		vertices.push(i);
+	}
+	for(var i=0;i<8;i++){
+		for(var j=0;j<8;j++){
+			aristas.push([9*i+j,9*i+j+1])
+			aristas.push([9*i+j,9*i+j+9])
+		}
+	}
+	for(var i=1;i<9;i++){
+		aristas.push([9*i-1,9*i+8])
+		aristas.push([71+i,72+i])
+	}
+	table[4].appendChild(peon_blanco);
+	table[76].appendChild(peon_negro);
+	vertices[4] = "O";
+	vertices[76] = "M";
+	
+	$(peon_negro).draggable({
+		containment: $('#table_body'),
+		grid:[65,65],
+		helper:"clone",
+		opacity:0.5,
+		revertDuration:250,
+	}).data("origin",table.indexOf(peon_negro.parentNode))
+	for(var l=0;l<table.length;l++){
+		$(table[l]).droppable({
+			drop: dropPawn,
+			accept: $("#peon_negro")
+		})
+	}
+	addWalltoChooseWall()
+	createVerticalWallTiles()
+	createHorizontalWallTiles()
+}
+
+init()
+</script>
+</body>
+</html>
