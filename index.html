@@ -992,8 +992,6 @@ function availableMoves(player,vertices,aristas,walls_me,walls_opp,verticalTiles
 	return avMoves
 }
 function AI(){
-//	$(peon_negro).draggable("disable");
-//	$(Wall).draggable("disable");
 	var vertices = window.vertices;
 	var aristas = window.aristas;
 	var wall_vertical_abstract = window.wall_vertical_tiles_abstract;
@@ -1052,8 +1050,6 @@ function AI(){
 			lose()
 		}
 	}
-//	$(peon_negro).draggable("enable")
-//	$(Wall).draggable("enable")
 }
 function init(){
 	window.vertices = []
