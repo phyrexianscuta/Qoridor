@@ -2,10 +2,19 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Untitled Document</title>
+<title>Qoridor: the game</title>
+
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>
+<link rel="stylesheet" href="bootstrap-4.0.0-alpha.6-dist/css/bootstrap.css"/>
+
 <style>
+	.text-info{
+		color:#331C11 !important;
+	}
+	.text-principal{
+		color: #201c1c !important;
+	}
 	.congratulations_win{
-		color: steelblue;
 		font-size: 25px;
 		text-align: center;
 		text-shadow: 1px 1px aliceblue;
@@ -25,15 +34,16 @@
 		height: 150px;
 		float:left;
 		margin-top: -380px;
-		margin-left: 842px;
+		margin-left: 849px;
 		display: inline-block;
 		background-color: antiquewhite;
 		border: 1px solid red;
+		border-radius: 4px;
 	}
 	#boton{
 		position: absolute;
-		top: 100px;
-		left: 849px;
+		top: 70px;
+		left: 850px;
 	}
 	#game_table{
 		display: block;
@@ -53,7 +63,7 @@
 		z-index:1;
 		box-shadow: 1px 1px 1px 1px grey;
 		margin-left: 40px;
-		margin-top: -40px
+		margin-top: -33px
 	}
 	.verticalWallInBoard{
 		width:17px;
@@ -77,26 +87,26 @@
 	}
 	#walls{
 		height:250px;
-		width:200px;
+		width:250px;
 		border-radius: 5xp;
 		border:1px solid grey;
 		position: absolute;
-		top: 150px;
+		top: 110px;
 		left: 850px;
 		display: block;
 	}
 	#walls h4{
 		margin-top:0px;
-		width: 130px;
+		width: 180px;
 		display: inline-block
 	}
 	#AIwallscounter{
 		width: 30px;
-		display: inline-block
+		font-size: 20px;		
 	}
 	#wallscounter{
 		width: 30px;
-		display: inline-block
+		font-size: 20px;
 	}
 	#chooseWall{
 		height: 70px;
@@ -139,7 +149,7 @@
 	#table{
 		border: 1px solid black;
 		width:730px;
-		height: 810px;
+		height: 745px;
 		position: relative;
 		margin-left: 80px;
 		background-color: antiquewhite
@@ -157,13 +167,13 @@
 	}
 	#table_header_bottom{
 		position: absolute;
-		bottom: 50px
+		bottom: 18px
 	}
-	#table_header_top{
-		margin-top: 30px;
+/*	#table_header_top{
+		margin-top: 0px;
 	}
-	.separacion{
-		height: 16px;
+*/	.separacion{
+		height: 18px;
 		width: 565px;
 		display: inline-block;
 		position: absolute;
@@ -171,11 +181,10 @@
 		left: 80px;
 	}
 	#separacion_top{
-		top:90px;
-
+		top:60px;
 	}
 	#separacion_bottom{
-		bottom:108px;
+		bottom:71px;
 	}
 	.peon{
 		margin-left: 7px;
@@ -185,6 +194,15 @@
 	}
 	.hover{
 		background-color: red !important
+	}
+	.btn-primary{
+		background-color: #ba5a18 !important;
+		border-color: #D9691C !important;
+	}
+	.card-danger{
+		background-color: #fff590 !important;
+		border-color: #FF963B !important
+		
 	}
 </style>
 <script>
@@ -298,16 +316,20 @@
 				</div>
 		</div>
 	</div>	
-	<div id="walls"> 
-		<h3>Walls</h3>
-		<h4>Your walls left:</h4> <div id="wallscounter">10</div>
-		<h4>AI walls left:</h4> <div id="AIwallscounter">10</div>
+	<div id="walls" class="card card-block"> 
+		<h3 class="text-principal">Walls</h3>
+		<div class="row">
+		<h4 class="text-info  col-md-10">Your walls left:</h4> <div id="wallscounter" class="text-info col-md-2">10</div>
+		</div>
+		<div class="row">
+		<h4 class="text-info col-md-10">AI walls left:</h4> <div id="AIwallscounter" class="text-info col-md-2">10</div>
+		</div>
 		<div id="chooseWall"></div>
 	</div>
-	<div id="messages">
+	<div id="messages" class="card-danger">
 	</div>
 </div>
-<input type="button" onClick="displayGraph2()" value="dibujar grafo" id="boton">
+<input type="button" onClick="displayGraph2()" value="dibujar grafo" class="btn btn-primary" id="boton">
 <script src="jquery-3.2.1.min.js"></script>
 <script src="jquery-ui-1.12.1/jquery-ui.js"></script>
 <script>
@@ -324,7 +346,7 @@ function win(){
 	$(Wall).draggable("disable")
 	var congratulations = document.createElement("p")
 	congratulations.innerHTML="Yay, you won the game!"
-	congratulations.className="congratulations_win"
+	congratulations.className="congratulations_win text-info"
 	document.getElementById("messages").innerHTML=""
 	document.getElementById("messages").appendChild(congratulations);
 }
@@ -333,7 +355,7 @@ function lose(){
 	$(Wall).draggable("disable");
 	var congratulations_lose = document.createElement("p");
 	congratulations_lose.innerHTML="Uh oh, you lost :-(";
-	congratulations_lose.className="congratulations_lose";
+	congratulations_lose.className="congratulations_lose text-info";
 	document.getElementById("messages").innerHTML="";
 	document.getElementById("messages").appendChild(congratulations_lose);
 }
@@ -511,8 +533,8 @@ function createVerticalWallTiles(){
 		for(c=0;c<8;c++){
 			var wallTile = document.createElement("div");
 			wallTile.className="vertical_wall_tile";
-			x = 215+c*65;
-			y = 124+r*65;
+			x = 208+c*65;
+			y = 86+r*65;
 			wallTile.style.top= y+"px";
 			wallTile.style.left = x+"px";
 			$(wallTile).droppable({
@@ -532,8 +554,8 @@ function createHorizontalWallTiles(){
 		for(c=0;c<8;c++){
 			var wallTile = document.createElement("div");
 			wallTile.className="horizontal_wall_tile";
-			x = 169+c*65;
-			y = 169+r*65;
+			x = 161+c*65;
+			y = 132+r*65;
 			wallTile.style.top= y+"px";
 			wallTile.style.left = x+"px";
 			$(wallTile).droppable({
@@ -742,7 +764,6 @@ function DijstrakNextRow(numberRow,player,vertices,aristas){
 		return Math.min(...distanceMe)
 	}
 }
-
 function Dijstrak(player,vertices,aristas){
 	var Nodes = []
 	var source = vertices.indexOf(player);
@@ -779,12 +800,12 @@ function Dijstrak(player,vertices,aristas){
 	}
 }
 function evaluatingfunction(vertices,aristas){
-	var distAI = Dijstrak("O",vertices,aristas)
-	var distMe = Dijstrak("M",vertices,aristas)
-	var movesToNextRowAI = movesToNextRow("O",vertices,aristas)
-	return distMe - distAI
+	var distAI = Dijstrak("O",vertices,aristas);
+	var distMe = Dijstrak("M",vertices,aristas);
+	var movesToNextRowAI = movesToNextRow("O",vertices,aristas);
+	var movesToNextRowMe = movesToNextRow("M",vertices,aristas);
+	return distMe - distAI + (movesToNextRowMe - movesToNextRowAI)/4
 }
-
 function movesToNextRow(player,vertices,aristas){
 	var start = vertices.indexOf(player);
 	var currentRow = Math.floor(start/9);
