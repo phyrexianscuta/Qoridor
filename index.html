@@ -354,7 +354,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 $('body').ready(function(){
 	timeStart = new Date()
 	})
-$(window).on( "unload", function(){
+$(window).on( "beforeunload", function(){
 	elapsed = new Date() -timeStart;
 	alert(elapsed);
 	})
