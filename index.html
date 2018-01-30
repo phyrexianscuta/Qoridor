@@ -625,8 +625,6 @@ function handleWallDropHorizontal(event,ui){
 	updateRemainingWalls();
 	updateLocalStorage("human",$(this).attr('id')+";");
 	
-//	localStorage.walls += $(this).attr('id')+";";
-	
 	AI();
 }
 function handleWallDropVertical(event,ui){
@@ -667,8 +665,6 @@ function handleWallDropVertical(event,ui){
 	aristas.splice(indexOf([vertex_top_left+9,vertex_top_left+10],aristas), 1)
 	updateRemainingWalls()
 	updateLocalStorage("human",$(this).attr('id')+";");
-	
-//	localStorage.walls += $(this).attr('id')+";";
 	
 	AI()
 }
@@ -1070,10 +1066,6 @@ function AI(){
 			aristas.splice(indexOf([indexBM+1,indexBM+10],aristas), 1);
 			
 			updateLocalStorage("ai","h"+(bestMove.index).toString()+";")
-			
-	//		localStorage.walls += "h"+(bestMove.index).toString()+";"
-			
-
 		}
 		else{
 			var wallInside = document.createElement("DIV");
@@ -1089,12 +1081,9 @@ function AI(){
 			wall_horizontal_abstract[bestMove.index] = 1;
 			aristas.splice(indexOf([indexBM,indexBM+1],aristas), 1);
 			aristas.splice(indexOf([indexBM+9,indexBM+10],aristas), 1);
+			
 			updateLocalStorage("ai","v"+(bestMove.index).toString()+";");
-//			localStorage.walls += "v"+(bestMove.index).toString()+";"
 		}
-		
-//		updateLocalStorage("ai");
-		
 	}
 	else{
 		var start = vertices.indexOf("O")
