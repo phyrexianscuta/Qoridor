@@ -219,8 +219,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 	}
 </style>
 <script>
-	//var timeStart = 0
-	//var timeEnd = 0
 	var peon_blanco = document.createElement('img')
 	var peon_negro = document.createElement('img')
 	var vertices=[]
@@ -255,16 +253,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </head>
 
 <body>
-<script>
-	$(body).ready(function(){
-		timeStart = new Date()
-	})
-	$(window).unload(function(){
-		elapsed = new Date() -timeStart;
-		alert(elapsed);
-	})
-			 
-</script>
 	<!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TJPZ83V"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -363,6 +351,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script src="jquery-3.2.1.min.js"></script>
 <script src="jquery-ui-1.12.1/jquery-ui.js"></script>
 <script>
+$(body).ready(function(){
+	timeStart = new Date()
+	})
+$(window).unload(function(){
+	elapsed = new Date() -timeStart;
+	alert(elapsed);
+	})
 var table_body = document.getElementById("table_body")
 for(var f=0; f<=8;f++){
 	for(var c=0;c<=8;c++){
