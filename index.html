@@ -45,6 +45,13 @@
 		top: 70px;
 		left: 850px;
 	}
+	#botonNewGame{
+		position: absolute;
+		top: 70px;
+		left: 980px;
+		width: 120px;
+		text-align: center;
+	}
 	#game_table{
 		display: block;
 	}
@@ -329,7 +336,8 @@
 	<div id="messages" class="card-danger">
 	</div>
 </div>
-<input type="button" onClick="displayGraph2()" value="dibujar grafo" class="btn btn-primary" id="boton">
+<input type="button" onClick="displayGraph2()" value="Dibujar grafo" class="btn btn-primary" id="boton">
+<input type="button" onClick="newGame()" value="Juego nuevo" class="btn btn-primary" id="botonNewGame">
 <script src="jquery-3.2.1.min.js"></script>
 <script src="jquery-ui-1.12.1/jquery-ui.js"></script>
 <script>
@@ -482,6 +490,10 @@ function displayGraph2(){
 	window.aristasTemp = window.aristas;
 	window.verticesTemp = window.vertices;
 }
+function newGame(){
+	localStorage.playing="0";
+	location.reload()
+}
 function addWalltoChooseWall(){
 	document.getElementById("chooseWall").innerHTML=""
 	Wall = document.createElement("DIV")
@@ -515,11 +527,14 @@ function dropPawn(event,ui){
 		$(peon_negro).draggable({revert:"valid"})
 	}
 	else{
-		$(peon_negro).data("origin",end)
-		vertices[start]=start
-		vertices[end]="M"
-		table[start].innerHTML=""
-		table[end].appendChild(peon_negro)
+		$(peon_negro).data("origin",end);
+		vertices[start]=start;
+		vertices[end]="M";
+		table[start].innerHTML="";
+		table[end].appendChild(peon_negro);
+		
+		updateLocalStorage("human","")
+		
 		if(winningPosition("M",vertices,aristas)){
 			win()
 		}
@@ -545,6 +560,7 @@ function createVerticalWallTiles(){
 			});
 			document.body.appendChild(wallTile);
 			window.wall_vertical_tiles.push(wallTile);
+			wallTile.id = "v"+(window.wall_vertical_tiles.length-1).toString()
 			window.wall_vertical_tiles_abstract.push(0)
 		}
 	}
@@ -566,6 +582,7 @@ function createHorizontalWallTiles(){
 			});
 			document.body.appendChild(wallTile);
 			window.wall_horizontal_tiles.push(wallTile);
+			wallTile.id = "h"+ (window.wall_horizontal_tiles.length-1).toString()
 			window.wall_horizontal_tiles_abstract.push(0)
 		}	
 	}
@@ -605,7 +622,11 @@ function handleWallDropHorizontal(event,ui){
 	$(this).append(inside);
 	aristas.splice(indexOf([vertex_top_left,vertex_top_left+9],aristas), 1);
 	aristas.splice(indexOf([vertex_top_left+1,vertex_top_left+10],aristas), 1);
-	document.getElementById("wallscounter").innerHTML=window.walls_me;
+	updateRemainingWalls();
+	updateLocalStorage("human",$(this).attr('id')+";");
+	
+//	localStorage.walls += $(this).attr('id')+";";
+	
 	AI();
 }
 function handleWallDropVertical(event,ui){
@@ -644,7 +665,11 @@ function handleWallDropVertical(event,ui){
 	$(this).append(inside)
 	aristas.splice(indexOf([vertex_top_left,vertex_top_left+1],aristas), 1)
 	aristas.splice(indexOf([vertex_top_left+9,vertex_top_left+10],aristas), 1)
-	document.getElementById("wallscounter").innerHTML=window.walls_me;
+	updateRemainingWalls()
+	updateLocalStorage("human",$(this).attr('id')+";");
+	
+//	localStorage.walls += $(this).attr('id')+";";
+	
 	AI()
 }
 function winningPosition(player,vertices,aristas){
@@ -1043,6 +1068,11 @@ function AI(){
 			wall_vertical_abstract[bestMove.index] =1;
 			aristas.splice(indexOf([indexBM,indexBM+9],aristas), 1);
 			aristas.splice(indexOf([indexBM+1,indexBM+10],aristas), 1);
+			
+			updateLocalStorage("ai","h"+(bestMove.index).toString()+";")
+			
+	//		localStorage.walls += "h"+(bestMove.index).toString()+";"
+			
 
 		}
 		else{
@@ -1057,14 +1087,22 @@ function AI(){
 				wall_vertical_abstract[bestMove.index-8] = 1;
 			}
 			wall_horizontal_abstract[bestMove.index] = 1;
-			aristas.splice(indexOf([indexBM,indexBM+1],aristas), 1)
-			aristas.splice(indexOf([indexBM+9,indexBM+10],aristas), 1)
+			aristas.splice(indexOf([indexBM,indexBM+1],aristas), 1);
+			aristas.splice(indexOf([indexBM+9,indexBM+10],aristas), 1);
+			updateLocalStorage("ai","v"+(bestMove.index).toString()+";");
+//			localStorage.walls += "v"+(bestMove.index).toString()+";"
 		}
+		
+//		updateLocalStorage("ai");
+		
 	}
 	else{
 		var start = vertices.indexOf("O")
 		vertices[start] = start
 		vertices[bestMove.index] = "O"
+		
+		updateLocalStorage("ai","");
+		
 		table[bestMove.index].appendChild(peon_blanco)
 		table[start].innerHTML=""
 		if(winningPosition("O",vertices,aristas)){
@@ -1073,11 +1111,15 @@ function AI(){
 	}
 }
 function init(){
-	window.vertices = []
-	window.aristas = []
-	var vertices = window.vertices
-	var aristas = window.aristas
+	window.vertices = [];
+	window.aristas = [];
+	var vertices = window.vertices;
+	var aristas = window.aristas;
 	var table = window.table;
+	localStorage.playing="1";
+	localStorage.walls="";
+	localStorage.walls_me = 10;
+	localStorage.walls_opp = 10;
 	for(var i=0;i<81;i++){
 		vertices.push(i);
 	}
@@ -1091,10 +1133,15 @@ function init(){
 		aristas.push([9*i-1,9*i+8])
 		aristas.push([71+i,72+i])
 	}
+	
+	localStorage.aristas = JSON.stringify(window.aristas);
+	
 	table[4].appendChild(peon_blanco);
 	table[76].appendChild(peon_negro);
 	vertices[4] = "O";
 	vertices[76] = "M";
+	
+	localStorage.vertices = JSON.stringify(window.vertices);
 	
 	$(peon_negro).draggable({
 		containment: $('#table_body'),
@@ -1109,12 +1156,80 @@ function init(){
 			accept: $("#peon_negro")
 		})
 	}
+	
 	addWalltoChooseWall()
 	createVerticalWallTiles()
 	createHorizontalWallTiles()
 }
+	
+if(localStorage.playing=="1"){
+	restoreGame()	
+}
+else{
+	init()
+}
+function restoreGame(){
+	window.vertices = JSON.parse(localStorage.vertices);
+	window.aristas = JSON.parse(localStorage.aristas);
+	window.walls_me = localStorage.walls_me;
+	window.walls_opp = localStorage.walls_opp;
+	var table = window.table;
 
-init()
+	table[vertices.indexOf("O")].appendChild(peon_blanco);
+	table[vertices.indexOf("M")].appendChild(peon_negro);
+	
+	$(peon_negro).draggable({
+		containment: $('#table_body'),
+		grid:[65,65],
+		helper:"clone",
+		opacity:0.5,
+		revertDuration:250,
+	}).data("origin",table.indexOf(peon_negro.parentNode))
+	for(var l=0;l<table.length;l++){
+		$(table[l]).droppable({
+			drop: dropPawn,
+			accept: $("#peon_negro")
+		})
+	}
+	addWalltoChooseWall();
+	createVerticalWallTiles();
+	createHorizontalWallTiles();
+	restoreWalls();
+	updateRemainingWalls();
+	window.wall_horizontal_tiles_abstract = JSON.parse(localStorage.wall_horizontal_tiles_abstract);
+	window.wall_vertical_tiles_abstract = JSON.parse(localStorage.wall_vertical_tiles_abstract);
+	if(localStorage.lastPlayer == "human"){
+		AI();
+	}
+}
+function restoreWalls(){
+	var walls = localStorage.walls.split(";").slice(0,-1);
+	for (var i=0; i < walls.length; i++){
+		var wall = document.createElement("DIV");
+		if(walls[i][0]=="v"){
+			wall.className = "verticalWallInBoard"
+		}
+		else{
+			wall.className = "horizontalWall"
+		}
+		document.getElementById(walls[i]).append(wall)
+	}
+}
+function updateRemainingWalls(){
+	document.getElementById("wallscounter").innerHTML=window.walls_me;
+	document.getElementById("AIwallscounter").innerHTML=window.walls_opp;
+}
+function updateLocalStorage(last_player,walls){
+	localStorage.aristas = JSON.stringify(window.aristas);
+	localStorage.walls_me = walls_me;
+	localStorage.walls_opp = walls_opp;
+	localStorage.walls += walls;
+	localStorage.lastPlayer = last_player;
+	localStorage.wall_horizontal_tiles_abstract = JSON.stringify(window.wall_horizontal_tiles_abstract);
+	localStorage.wall_vertical_tiles_abstract = JSON.stringify(window.wall_vertical_tiles_abstract);
+	localStorage.vertices = JSON.stringify(window.vertices);
+}	
+
 </script>
 </body>
 </html>
