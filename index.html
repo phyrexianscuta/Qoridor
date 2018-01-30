@@ -219,9 +219,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 	}
 </style>
 <script>
+	//var timeStart = 0
+	//var timeEnd = 0
 	var peon_blanco = document.createElement('img')
 	var peon_negro = document.createElement('img')
-	var	vertices=[]
+	var vertices=[]
 	var aristasTemp = []
 	var aristas = []
 	var table= []
@@ -253,6 +255,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </head>
 
 <body>
+<script>
+	$(body).ready(function(){
+		timeStart = new Date()
+	})
+	$(window).unload(function(){
+		elapsed = new Date() -timeStart;
+		alert(elapsed);
+	})
+			 
+<script>
 	<!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TJPZ83V"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
