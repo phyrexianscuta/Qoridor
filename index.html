@@ -1,6 +1,9 @@
 <!doctype html>
 <html>
 <head>
+<script>
+	dataLayer = [];
+</script>
 	<!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -354,9 +357,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 $('body').ready(function(){
 	timeStart = new Date()
 	})
-$(window).on( "beforeunload", function(){
+$(window).on( "onunload", function(){
 	elapsed = new Date() -timeStart;
-	alert(elapsed);
+	dataLayer.push({'timeElapsed': elapsed
+		})
 	})
 var table_body = document.getElementById("table_body")
 for(var f=0; f<=8;f++){
