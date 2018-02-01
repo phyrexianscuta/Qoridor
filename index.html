@@ -629,15 +629,18 @@ function handleWallDropHorizontal(event,ui){
 	$(this).droppable('disable');
 	window.wall_horizontal_tiles_abstract[index] = 1
 	if(index+1<65 && Math.floor(index/8) == Math.floor((index+1)/8)){
-		$(horizontalTiles[index+1]).droppable('disable');
-		window.wall_horizontal_tiles_abstract[index+1] = 1
+		disableHorizontalWall(index+1);
+	//	$(horizontalTiles[index+1]).droppable('disable');
+	//	window.wall_horizontal_tiles_abstract[index+1] = 1
 	}
 	if(index-1>=0 && Math.floor(index/8) == Math.floor((index-1)/8)){
-		$(horizontalTiles[index-1]).droppable('disable');
-		window.wall_horizontal_tiles_abstract[index-1] = 1;
+		disableHorizontalWall(index-1);
+	//	$(horizontalTiles[index-1]).droppable('disable');
+	//	window.wall_horizontal_tiles_abstract[index-1] = 1;
 	}
-	$(verticalTiles[index]).droppable('disable');
-	window.wall_vertical_tiles_abstract[index] = 1;
+	disableVerticalWall(index);
+//	$(verticalTiles[index]).droppable('disable');
+//	window.wall_vertical_tiles_abstract[index] = 1;
 	ui.draggable.draggable( 'disable' );
 	inside.className="horizontalWall";
 	$(this).append(inside);
@@ -670,15 +673,19 @@ function handleWallDropVertical(event,ui){
 	$(this).droppable('disable');
 	window.wall_vertical_tiles_abstract[index] =1;
 	if(index+8<65){
-		$(verticalTiles[index+8]).droppable('disable');
-		window.wall_vertical_tiles_abstract[index+8] =1;
+		disableVerticalWall(index+8);
+	//	$(verticalTiles[index+8]).droppable('disable');
+	//	window.wall_vertical_tiles_abstract[index+8] =1;
 	}
 	if(index-8>=0){
-		$(verticalTiles[index-8]).droppable('disable');
-		window.wall_vertical_tiles_abstract[index-8] =1;
+		disableVerticalWall(index-8);
+	//	$(verticalTiles[index-8]).droppable('disable');
+	//	window.wall_vertical_tiles_abstract[index-8] =1;
 	}
+	disableHorizontalWall(index);
 	$(horizontalTiles[index]).droppable('disable')
 	window.wall_horizontal_tiles_abstract[index] = 1
+	
 	ui.draggable.draggable( 'disable' );
 	inside.className="verticalWallInBoard"
 	$(this).append(inside)
@@ -1075,14 +1082,24 @@ function AI(){
 			var wallInside = document.createElement("DIV");
 			wallInside.className="horizontalWall";
 			horizontalTiles[bestMove.index].appendChild(wallInside);
-			wall_horizontal_abstract[bestMove.index] = 1;
+			
+			disableHorizontalWall(bestMove.index);
+	//		wall_horizontal_abstract[bestMove.index] = 1;
+	//		$(wall_horizontal_tiles[bestMove.index]).droppable('disable');
 			if(bestMove.index+1<65 && Math.floor(bestMove.index/8) == Math.floor((bestMove.index+1)/8)){
-				wall_horizontal_abstract[bestMove.index+1] = 1;
+				disableHorizontalWall(bestMove.index+1);
+	//			wall_horizontal_abstract[bestMove.index+1] = 1;
+	//			$(wall_horizontal_tiles[bestMove.index+1]).droppable('disable');
 			}
 			if(bestMove.index-1>=0 && Math.floor(bestMove.index/8) == Math.floor((bestMove.index-1)/8)){
-				wall_horizontal_abstract[bestMove.index-1] = 1;
+				disableHorizontalWall(bestMove.index-1);
+	//			wall_horizontal_abstract[bestMove.index-1] = 1;
+	//			$(wall_horizontal_tiles[bestMove.index-1]).droppable('disable');
 			}
-			wall_vertical_abstract[bestMove.index] =1;
+			disableVerticalWall(bestMove.index);
+	//		wall_vertical_abstract[bestMove.index] =1;
+	//		$(wall_vertical_tiles[bestMove.index]).droppable('disable');
+			
 			aristas.splice(indexOf([indexBM,indexBM+9],aristas), 1);
 			aristas.splice(indexOf([indexBM+1,indexBM+10],aristas), 1);
 			
@@ -1092,14 +1109,27 @@ function AI(){
 			var wallInside = document.createElement("DIV");
 			wallInside.className="verticalWallInBoard";
 			verticalTiles[bestMove.index].appendChild(wallInside);
-			wall_vertical_abstract[bestMove.index] = 1
+			
+			disableVerticalWall(bestMove.index);
+	//		wall_vertical_abstract[bestMove.index] = 1;
+	//		$(wall_vertical_tiles[bestMove.index]).droppable('disable');
+			
 			if(bestMove.index+8<65){
-				wall_vertical_abstract[bestMove.index+8] = 1;
+				disableVerticalWall(bestMove.index+8);
+	//			wall_vertical_abstract[bestMove.index+8] = 1;
+	//			$(wall_vertical_tiles[bestMove.index+8]).droppable('disable');
+				
 			}
 			if(bestMove.index-8>=0){
-				wall_vertical_abstract[bestMove.index-8] = 1;
+				disableVerticalWall(bestMove.index-8)
+	//			wall_vertical_abstract[bestMove.index-8] = 1;
+	//			$(wall_vertical_tiles[bestMove.index-8]).droppable('disable');
+				
 			}
-			wall_horizontal_abstract[bestMove.index] = 1;
+			disableHorizontalWall(bestMove.index);
+	//		wall_horizontal_abstract[bestMove.index] = 1;
+	//		$(wall_horizontal_tiles[bestMove.index]).droppable('disable');
+			
 			aristas.splice(indexOf([indexBM,indexBM+1],aristas), 1);
 			aristas.splice(indexOf([indexBM+9,indexBM+10],aristas), 1);
 			
@@ -1120,6 +1150,17 @@ function AI(){
 		}
 	}
 }
+
+function disableVerticalWall(index){
+	wall_vertical_tiles_abstract[index] = 1;
+	$(wall_vertical_tiles[index]).droppable('disable');
+}
+
+function disableHorizontalWall(index){
+	wall_horizontal_tiles_abstract[index] = 1;
+	$(wall_horizontal_tiles[index]).droppable('disable');
+}
+
 function init(){
 	window.vertices = [];
 	window.aristas = [];
@@ -1208,10 +1249,25 @@ function restoreGame(){
 	updateRemainingWalls();
 	window.wall_horizontal_tiles_abstract = JSON.parse(localStorage.wall_horizontal_tiles_abstract);
 	window.wall_vertical_tiles_abstract = JSON.parse(localStorage.wall_vertical_tiles_abstract);
+	disableUnavailablewalls();
 	if(localStorage.lastPlayer == "human"){
 		AI();
 	}
 }
+
+function disableUnavailablewalls(){
+	for(var i=0; i< wall_horizontal_tiles_abstract.length;i++){
+		if(wall_horizontal_tiles_abstract[i]==1){
+			$(wall_horizontal_tiles[i]).droppable('disable');
+		}
+	}
+	for(var j=0; j< wall_vertical_tiles_abstract.length;j++){
+		if(wall_vertical_tiles_abstract[j]==1){
+			$(wall_vertical_tiles[j]).droppable('disable');
+		}
+	}
+}
+
 function restoreWalls(){
 	var walls = localStorage.walls.split(";").slice(0,-1);
 	for (var i=0; i < walls.length; i++){
