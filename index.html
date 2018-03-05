@@ -915,7 +915,7 @@ function minimax(player,vertices,aristas,wall_vertical_abstract,wall_horizontal_
 				copia_aristas.splice(indexOf([vertex_top_left+1,vertex_top_left+10],copia_aristas), 1);
 				
 			}
-			else if(avMoves[l].kind="VW"){
+			else if(avMoves[l].kind=="VW"){
 				move.kind="VW";
 				move.index = avMoves[l].index;
 				wall_vert_abst_copy[move.index] = 1;
@@ -978,7 +978,7 @@ function minimax(player,vertices,aristas,wall_vertical_abstract,wall_horizontal_
 				copia_aristas.splice(indexOf([vertex_top_left,vertex_top_left+9],copia_aristas), 1);
 				copia_aristas.splice(indexOf([vertex_top_left+1,vertex_top_left+10],copia_aristas), 1);
 			}
-			else if(avMoves[l].kind="VW"){
+			else if(avMoves[l].kind=="VW"){
 				move.kind="VW";
 				move.index = avMoves[l].index;
 				wall_vert_abst_copy[move.index] = 1;
