@@ -243,7 +243,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 	
 	function shuffle(array){
   		var currentIndex = array.length, temporaryValue, randomIndex;
-  		while (0 !== currentIndex) {
+  		while (0 != currentIndex) {
 			randomIndex = Math.floor(Math.random() * currentIndex);
 			currentIndex -= 1;
 			temporaryValue = array[currentIndex];
@@ -411,7 +411,7 @@ function invalidMove(player,start,end,vertices,aristas){
 	else{
 		var opp = "M"
 	}
-	if(vertices[end]==opp){
+	if(vertices[end]=="M"||vertices[end]=="O"){
 		return true
 	}
 	if(Math.abs(start-end)==1 || Math.abs(start-end)==9){
@@ -903,7 +903,7 @@ function minimax(player,vertices,aristas,wall_vertical_abstract,wall_horizontal_
 				move.index = avMoves[l].index;
 				wall_horiz_abst_copy[move.index] = 1;
 				walls_me_copy -= 1
-				if(move.index+1<65 && Math.floor(move.index/8) == Math.floor((move.index+1)/8)){
+				if(move.index+1<64 && Math.floor(move.index/8) == Math.floor((move.index+1)/8)){
 					wall_horiz_abst_copy[move.index+1] = 1;
 				}
 				if(move.index-1>=0 && Math.floor(move.index/8) == Math.floor((move.index-1)/8)){
@@ -920,7 +920,7 @@ function minimax(player,vertices,aristas,wall_vertical_abstract,wall_horizontal_
 				move.index = avMoves[l].index;
 				wall_vert_abst_copy[move.index] = 1;
 				walls_me_copy -= 1
-				if(move.index+8<65){
+				if(move.index+8<64){
 					wall_vert_abst_copy[move.index+8] = 1;
 				}
 				if(move.index-8>=0){
@@ -967,7 +967,7 @@ function minimax(player,vertices,aristas,wall_vertical_abstract,wall_horizontal_
 				move.index = avMoves[l].index;
 				wall_horiz_abst_copy[move.index] = 1;
 				walls_opp_copy -= 1;
-				if(move.index+1<65 && Math.floor(move.index/8) == Math.floor((move.index+1)/8)){
+				if(move.index+1<64 && Math.floor(move.index/8) == Math.floor((move.index+1)/8)){
 					wall_horiz_abst_copy[move.index+1] = 1;
 				}
 				if(move.index-1>=0 && Math.floor(move.index/8) == Math.floor((move.index-1)/8)){
@@ -983,7 +983,7 @@ function minimax(player,vertices,aristas,wall_vertical_abstract,wall_horizontal_
 				move.index = avMoves[l].index;
 				wall_vert_abst_copy[move.index] = 1;
 				walls_opp_copy -= 1;
-				if(move.index+8<65){
+				if(move.index+8<64){
 					wall_vert_abst_copy[move.index+8] = 1;
 				}
 				if(move.index-8>=0){
@@ -1019,10 +1019,10 @@ function availableMoves(player,vertices,aristas,walls_me,walls_opp,verticalTiles
 		var numberwalls = walls_me;
 	}
 	for(var i=0; i <81;i++){
-		if(!invalidMove(player,start,vertices[i],vertices,aristas) ){
+		if(!invalidMove(player,start,i,vertices,aristas) ){
 			var move = new Object();
 			move.kind ="P";
-			move.index= vertices[i];
+			move.index= i;
 			avMoves.push(move)
 		}
 	}
@@ -1032,6 +1032,9 @@ function availableMoves(player,vertices,aristas,walls_me,walls_opp,verticalTiles
 			var vertex_top_left = topLeftVertex(i);
 			copia_aristas.splice(indexOf([vertex_top_left,vertex_top_left+9],copia_aristas), 1);
 			copia_aristas.splice(indexOf([vertex_top_left+1,vertex_top_left+10],copia_aristas), 1);
+			if( copia_aristas.splice(indexOf([vertex_top_left+1,vertex_top_left+10],copia_aristas), 1) <0){
+			alert("error hw")
+			}
 			if(!invalidWall(vertices,copia_aristas) &&  !invalidWall(vertices,copia_aristas) ){
 				var move = new Object();
 				move.kind="HW";
@@ -1132,17 +1135,14 @@ function AI(){
 		}
 	}
 }
-
 function disableVerticalWall(index){
 	wall_vertical_tiles_abstract[index] = 1;
 	$(wall_vertical_tiles[index]).droppable('disable');
 }
-
 function disableHorizontalWall(index){
 	wall_horizontal_tiles_abstract[index] = 1;
 	$(wall_horizontal_tiles[index]).droppable('disable');
 }
-
 function init(){
 	window.vertices = [];
 	window.aristas = [];
@@ -1194,7 +1194,6 @@ function init(){
 	createVerticalWallTiles()
 	createHorizontalWallTiles()
 }
-	
 if(localStorage.playing=="1"){
 	restoreGame()	
 }
@@ -1236,7 +1235,6 @@ function restoreGame(){
 		AI();
 	}
 }
-
 function disableUnavailablewalls(){
 	for(var i=0; i< wall_horizontal_tiles_abstract.length;i++){
 		if(wall_horizontal_tiles_abstract[i]==1){
@@ -1249,7 +1247,6 @@ function disableUnavailablewalls(){
 		}
 	}
 }
-
 function restoreWalls(){
 	var walls = localStorage.walls.split(";").slice(0,-1);
 	for (var i=0; i < walls.length; i++){
