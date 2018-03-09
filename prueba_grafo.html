@@ -62,6 +62,12 @@ function initVertices(vertices,aristas){
 			if(x+y*9 ==AI ){
 				vertice.className += " verticeAI"
 			}
+			if(  !invalidMove("M", me, x+y*9,vertices,aristas) ){
+					vertice.className += " verticeAllowedMe"
+				}
+			if(  !invalidMove("O", AI, x+y*9,vertices,aristas) ){
+					vertice.className += " verticeAllowedAI"
+				}
 			document.body.appendChild(vertice)
 		}
 	}
