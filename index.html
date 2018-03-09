@@ -420,16 +420,16 @@ function invalidMove(player,start,end,vertices,aristas){
 		}
 	}
 	if(Math.abs(start-end)== 2 || Math.abs(start-end)== 18){
-		if(vertices[start+9]==opp && end== start+18 && isAristaAvailable(start,start+9,aristas) && isAristaAvailable(start+9,start+18,aristas)){
+		if( end== start+18 && vertices[start+9]==opp && isAristaAvailable(start,start+9,aristas) && isAristaAvailable(start+9,start+18,aristas)){
 			return false
 		}
-		if(vertices[start-9]==opp && end== start-18 && isAristaAvailable(start,start-9,aristas) && isAristaAvailable(start-9,start-18,aristas)){
+		if( end== start-18 && vertices[start-9]==opp && isAristaAvailable(start,start-9,aristas) && isAristaAvailable(start-9,start-18,aristas)){
 			return false
 		}
-		if(vertices[start+1]==opp && end== start+2 && isAristaAvailable(start,start+1,aristas) && isAristaAvailable(start+1,start+2,aristas)){
+		if( end== start+2 && vertices[start+1]==opp && isAristaAvailable(start,start+1,aristas) && isAristaAvailable(start+1,start+2,aristas)){
 			return false
 		}
-		if(vertices[start-1]==opp && end== start-2 && isAristaAvailable(start,start-1,aristas) && isAristaAvailable(start-1,start-2,aristas)){
+		if( end== start-2 && vertices[start-1]==opp && isAristaAvailable(start,start-1,aristas) && isAristaAvailable(start-1,start-2,aristas)){
 			return false
 		}
 	}
@@ -439,16 +439,16 @@ function invalidMove(player,start,end,vertices,aristas){
 	if(end==start+10 && vertices[start+9]==opp && isAristaAvailable(start,start+9,aristas) && isAristaAvailable(start+9,start+10,aristas) && !isAristaAvailable(start+9,start+18,aristas) ){
 		return false
 	}
-	if(end==start+8 && vertices[start+9]==opp && isAristaAvailable(start,start+9,aristas) && isAristaAvailable(start+8,start+9,aristas) && !isAristaAvailable(start+9,start+18,aristas) ){
+	if(end==start+8 && start%9 !=0 && vertices[start+9]==opp && isAristaAvailable(start,start+9,aristas) && isAristaAvailable(start+8,start+9,aristas) && !isAristaAvailable(start+9,start+18,aristas) ){
 		return false
 	}
-	if(end==start+8 && vertices[start-1]==opp && isAristaAvailable(start,start-1,aristas) && isAristaAvailable(start-1,start+8,aristas) && !isAristaAvailable(start-1,start-2,aristas) ){
+	if(end==start+8 && start%9 !=0 && vertices[start-1]==opp && isAristaAvailable(start,start-1,aristas) && isAristaAvailable(start-1,start+8,aristas) && !isAristaAvailable(start-1,start-2,aristas) ){
 		return false
 	}
-	if(end==start-10 && vertices[start-1]==opp && isAristaAvailable(start,start-1,aristas) && isAristaAvailable(start-1,start-10,aristas) && !isAristaAvailable(start-1,start-2,aristas) ){
+	if(end==start-10&& start%9 !=0  && vertices[start-1]==opp && isAristaAvailable(start,start-1,aristas) && isAristaAvailable(start-1,start-10,aristas) && !isAristaAvailable(start-1,start-2,aristas) ){
 		return false
 	}
-	if(end==start-10 && vertices[start-9]==opp && isAristaAvailable(start,start-9,aristas) && isAristaAvailable(start-9,start-10,aristas) && !isAristaAvailable(start-9,start-18,aristas) ){
+	if(end==start-10 && start%9 !=0 && vertices[start-9]==opp && isAristaAvailable(start,start-9,aristas) && isAristaAvailable(start-9,start-10,aristas) && !isAristaAvailable(start-9,start-18,aristas) ){
 		return false
 	}
 	if(end==start-8 && vertices[start-9]==opp && isAristaAvailable(start,start-9,aristas) && isAristaAvailable(start-9,start-8,aristas) && !isAristaAvailable(start-9,start-18,aristas) ){
@@ -861,7 +861,7 @@ function movesToNextRow(player,vertices,aristas){
 	}
 }
 function minimax(player,vertices,aristas,wall_vertical_abstract,wall_horizontal_abstract,depth,alpha,beta,walls_me,walls_opp){
-	depth +=1;
+	//depth +=1;
 	if(winningPosition("M",vertices,aristas)){
 		var x = new Object()
 		x.score = depth-100
@@ -872,7 +872,7 @@ function minimax(player,vertices,aristas,wall_vertical_abstract,wall_horizontal_
 		x.score = 100-depth;
 		return x
 	}
-	else if(depth==3){
+	else if(depth==2){
 		var x = new Object();
 		var ev = evaluatingfunction(vertices,aristas);
 		x.score = ev;
@@ -931,7 +931,7 @@ function minimax(player,vertices,aristas,wall_vertical_abstract,wall_horizontal_
 				copia_aristas.splice(indexOf([vertex_top_left,vertex_top_left+1],copia_aristas), 1);
 				copia_aristas.splice(indexOf([vertex_top_left+9,vertex_top_left+10],copia_aristas), 1);
 			}
-			var result=minimax("O",copia_vertices,copia_aristas,wall_vert_abst_copy,wall_horiz_abst_copy,depth,alpha,beta,walls_me_copy,walls_opp_copy);
+			var result=minimax("O",copia_vertices,copia_aristas,wall_vert_abst_copy,wall_horiz_abst_copy,depth+1,alpha,beta,walls_me_copy,walls_opp_copy);
 			move.score = result.score;
 			if(move.score < bestMove.score){
 				bestMove.index = move.index;
@@ -994,7 +994,7 @@ function minimax(player,vertices,aristas,wall_vertical_abstract,wall_horizontal_
 				copia_aristas.splice(indexOf([vertex_top_left,vertex_top_left+1],copia_aristas), 1);
 				copia_aristas.splice(indexOf([vertex_top_left+9,vertex_top_left+10],copia_aristas), 1);
 			}
-			var result=minimax("M",copia_vertices,copia_aristas,wall_vert_abst_copy,wall_horiz_abst_copy,depth,alpha,beta,walls_me_copy,walls_opp_copy);
+			var result=minimax("M",copia_vertices,copia_aristas,wall_vert_abst_copy,wall_horiz_abst_copy,depth+1,alpha,beta,walls_me_copy,walls_opp_copy);
 			move.score = result.score;
 			if(move.score > bestMove.score){
 				bestMove.index = move.index;
@@ -1083,7 +1083,7 @@ function AI(){
 			
 			disableHorizontalWall(bestMove.index);
 
-			if(bestMove.index+1<65 && Math.floor(bestMove.index/8) == Math.floor((bestMove.index+1)/8)){
+			if(bestMove.index+1<64 && Math.floor(bestMove.index/8) == Math.floor((bestMove.index+1)/8)){
 				disableHorizontalWall(bestMove.index+1);
 			}
 			
@@ -1105,7 +1105,7 @@ function AI(){
 			
 			disableVerticalWall(bestMove.index);
 			
-			if(bestMove.index+8<65){
+			if(bestMove.index+8<64){
 				disableVerticalWall(bestMove.index+8);
 			}
 			
@@ -1135,6 +1135,43 @@ function AI(){
 		}
 	}
 }
+function placeHW_DEBUGTOOL(index){
+	var indexBM = topLeftVertex(index);
+	var horizontalTiles = window.wall_horizontal_tiles;
+	var wallInside = document.createElement("DIV");
+	wallInside.className="horizontalWall";
+	horizontalTiles[index].appendChild(wallInside);
+	disableHorizontalWall(index);
+	if(index+1<64 && Math.floor(index/8) == Math.floor((index+1)/8)){
+		disableHorizontalWall(index+1);
+	}
+	if(index-1>=0 && Math.floor(index/8) == Math.floor((index-1)/8)){
+		disableHorizontalWall(index-1);
+	}
+	disableVerticalWall(index);
+	aristas.splice(indexOf([indexBM,indexBM+9],aristas), 1);
+	aristas.splice(indexOf([indexBM+1,indexBM+10],aristas), 1);
+	updateLocalStorage("ai","h"+(index).toString()+";")
+}
+function placeVW_DEBUGTOOL(index){
+			var indexBM = topLeftVertex(index);
+			var verticalTiles = window.wall_vertical_tiles;
+			var wallInside = document.createElement("DIV");
+			wallInside.className="verticalWallInBoard";
+			verticalTiles[index].appendChild(wallInside);
+			disableVerticalWall(index);
+			if(index+8<64){
+				disableVerticalWall(index+8);
+			}
+			if(index-8>=0){
+				disableVerticalWall(index-8)
+			}
+			disableHorizontalWall(index);
+			aristas.splice(indexOf([indexBM,indexBM+1],aristas), 1);
+			aristas.splice(indexOf([indexBM+9,indexBM+10],aristas), 1);
+			updateLocalStorage("ai","v"+(index).toString()+";");
+			
+			}
 function disableVerticalWall(index){
 	wall_vertical_tiles_abstract[index] = 1;
 	$(wall_vertical_tiles[index]).droppable('disable');
@@ -1190,9 +1227,10 @@ function init(){
 		})
 	}
 	
-	addWalltoChooseWall()
-	createVerticalWallTiles()
-	createHorizontalWallTiles()
+	addWalltoChooseWall();
+	createVerticalWallTiles();
+	createHorizontalWallTiles();
+	
 }
 if(localStorage.playing=="1"){
 	restoreGame()	
