@@ -1154,24 +1154,23 @@ function placeHW_DEBUGTOOL(index){
 	updateLocalStorage("ai","h"+(index).toString()+";")
 }
 function placeVW_DEBUGTOOL(index){
-			var indexBM = topLeftVertex(index);
-			var verticalTiles = window.wall_vertical_tiles;
-			var wallInside = document.createElement("DIV");
-			wallInside.className="verticalWallInBoard";
-			verticalTiles[index].appendChild(wallInside);
-			disableVerticalWall(index);
-			if(index+8<64){
-				disableVerticalWall(index+8);
-			}
-			if(index-8>=0){
-				disableVerticalWall(index-8)
-			}
-			disableHorizontalWall(index);
-			aristas.splice(indexOf([indexBM,indexBM+1],aristas), 1);
-			aristas.splice(indexOf([indexBM+9,indexBM+10],aristas), 1);
-			updateLocalStorage("ai","v"+(index).toString()+";");
-			
-			}
+	var indexBM = topLeftVertex(index);
+	var verticalTiles = window.wall_vertical_tiles;
+	var wallInside = document.createElement("DIV");
+	wallInside.className="verticalWallInBoard";
+	verticalTiles[index].appendChild(wallInside);
+	disableVerticalWall(index);
+	if(index+8<64){
+		disableVerticalWall(index+8);
+	}
+	if(index-8>=0){
+		disableVerticalWall(index-8)
+	}
+	disableHorizontalWall(index);
+	aristas.splice(indexOf([indexBM,indexBM+1],aristas), 1);
+	aristas.splice(indexOf([indexBM+9,indexBM+10],aristas), 1);
+	updateLocalStorage("ai","v"+(index).toString()+";");	
+	}
 function disableVerticalWall(index){
 	wall_vertical_tiles_abstract[index] = 1;
 	$(wall_vertical_tiles[index]).droppable('disable');
