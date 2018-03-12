@@ -805,7 +805,7 @@ function DijstrakNextRow(numberRow,player,vertices,aristas){
 			for(var j=0; j<9;j++){
 				distanceMe.push(Nodes[nextRow[j]].distance);
 			}
-		return Math.min(...distanceMe)
+		return Math.min(...distanceMe);
 	}
 }
 function Dijstrak(player,vertices,aristas){
