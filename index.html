@@ -919,7 +919,7 @@ function minimax(player,vertices,aristas,wall_vertical_abstract,wall_horizontal_
 				move.kind="VW";
 				move.index = avMoves[l].index;
 				wall_vert_abst_copy[move.index] = 1;
-				walls_me_copy -= 1
+				walls_me_copy -= 1;
 				if(move.index+8<64){
 					wall_vert_abst_copy[move.index+8] = 1;
 				}
